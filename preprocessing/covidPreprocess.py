@@ -80,7 +80,7 @@ def getCoronaVocabulary():
     X2 = vectorizerTitle.fit_transform(titles)
     
     print('Data shape for text: ', X.shape)
-    print('Data shape for titles: ', X.shape)
+    print('Data shape for titles: ', X2.shape)
     
     #can comment out to not see the vocabularies
     print('Vocabulary for text: ', vectorizerText.get_feature_names())
