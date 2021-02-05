@@ -91,4 +91,29 @@ def getCoronaVocabulary():
 
     return X, Y, vectorizerText, X2, vectorizerTitle
 
+    # data visualization
+    
+    # top 10 words appeared in False articles (display a percentage of the word bank)
+    # top 10 words appeared in True articles (display a percentage of the word bank)
+    # top 10 words that appear in the True article and not appear in False article
+    # top 10 words that appear in the False article and not appear in True article
+    # Find the word with the most and least frequency
+    # Find the True-to-False ratio on Nan title and NaN text (for finding whether removing them can cause a significant bias)
+
+    # preprocessing
+
+    # second dataset: convert the truthfulness into binary variable
+    # remove the data entry with NaN text and NaN title
+    # combine the text and title as a single feature
+    # lamentization
+    # try to get the whole number (e.g. 100,000 is counted as "100,000" instead of "100","000")
+    # trigram (for future implementation)
+    # separate the sources into names type and url types (for future implementation)
+
+    # UI/UX
+    # Figma for prototype (home page, about page)
+    # Vue init file structure
+    # user study with people you know (for future implementation)
+    # user study to find how better humans can classify the false information than the model
+
 getCoronaVocabulary()
