@@ -1,7 +1,7 @@
 #Written by Mia Markovic (mmarkovi, 39425669) using base code provided for assignment 1 for CS 175
  
 # ---------------------------------------------------------------------------------------
-# CS 175, WINTER 2021: VERITY COVID DATA PREPROCESSING
+# CS 175, WINTER 2021: VERITY FAKENEWSNET DATA PREPROCESSING
 #
 # ---------------------------------------------------------------------------------------
 
@@ -21,29 +21,22 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import preprocessingFunctions as pf
 
-coronafile =  pd.read_csv("../datasets/corona_fake.csv")
-
-#cleaning up broken data according to labels added by
-# https://towardsdatascience.com/explore-covid-19-infodemic-2d1ceaae2306
-coronafile.loc[5]['label'] = 'fake'
-coronafile.loc[15]['label'] = 'true'
-coronafile.loc[43]['label'] = 'fake'
-coronafile.loc[131]['label'] = 'true'
-coronafile.loc[242]['label'] = 'fake'
+fnnfile =  pd.read_csv("../datasets/fake news detection(FakeNewsNet)/fnn_test.csv")
 
 
-def getCoronaVocabulary():
+
+def getFNNVocabulary():
     text = []
-    #titles = []
+    titles = []
     Y = []
     i = 0
     nanTitle = 0
     nanText = 0
     print('\nExtracting tokens from each review.....(can be slow for a large number of reviews)......')   
-    for d in coronafile.loc:
-        ftext = d['text']   # keep only the text and label
-        ftitle = d['title']      
-        label = (d['label']).lower()
+    for d in fnnfile.loc:
+        ftext = d['fullText_based_content']     # keep only the text and label
+        ftitle = d['statement']
+        label = (d['label_fnn']).lower()
         
         score = 1 #1 for true, 0 for fake
         if (label == "fake"):
@@ -65,7 +58,7 @@ def getCoronaVocabulary():
         #titles.append(ftitle)
         Y.append(score)
         i += 1
-        if (i == 1164):
+        if (i == 1054):   #1054 for test data, 15212 for training
             #for some reason the for loop doesnt know when to stop so put in a manual break
             break
     print("there are", nanTitle, "nan titles")
@@ -83,22 +76,11 @@ def getCoronaVocabulary():
     #X2 = vectorizerNoLem.fit_transform(text)
     
     print('Data shape for text: ', X.shape)
-    p#rint('Data shape for text: ', X2.shape)
+    #print('Data shape for text: ', X2.shape)
     
     #can comment out to not see the vocabularies
     print('Vocabulary for text: ', vectorizerText.get_feature_names())
 
     return X, Y, vectorizerText
 
-
-getCoronaVocabulary()
-
-# preprocessing
-
-# second dataset: convert the truthfulness into binary variable -- DONE
-# remove the data entry with NaN text and NaN title  -- DONE
-# combine the text and title as a single feature  -- DONE
-# lemmatization --DONE
-# try to get the whole number (e.g. 100,000 is counted as "100,000" instead of "100","000")  -- DONE
-# trigram (for future implementation) -easy to add later
-# separate the sources into names type and url types (for future implementation) -need to check in 
+getFNNVocabulary()
