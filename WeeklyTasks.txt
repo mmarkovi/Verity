@@ -1,11 +1,11 @@
 BY 2/7/2021
 # data visualization
     
-# top 10 words appeared in False articles (display a percentage of the word bank)
-# top 10 words appeared in True articles (display a percentage of the word bank)
-# top 10 words that appear in the True article and not appear in False article
-# top 10 words that appear in the False article and not appear in True article
-# Find the word with the most and least frequency
+# top 10 words appeared in False articles (display a percentage of the word bank) DONE
+# top 10 words appeared in True articles (display a percentage of the word bank) DONE
+# top 10 words that appear in the True article and not appear in False article DONE
+# top 10 words that appear in the False article and not appear in True article DONE
+# Find the word with the most and least frequency DONE
 # Find the True-to-False ratio on Nan title and NaN text (for finding whether removing them can cause a significant bias)
 
 # preprocessing
