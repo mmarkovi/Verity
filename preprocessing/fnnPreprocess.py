@@ -59,7 +59,7 @@ def getFNNVocabulary():
         Y.append(score)
         i += 1
         if (i == 1054):   #1054 for test data, 15212 for training
-            #for some reason the for loop doesnt know when to stop so put in a manual break
+            # for some reason the for loop doesnt know when to stop so put in a manual break
             break
     print("there are", nanTitle, "nan titles")
     print("there are", nanText, "nan text")
