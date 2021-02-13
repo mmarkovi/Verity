@@ -23,3 +23,9 @@ BY 2/7/2021
 # Vue init file structure
 # user study with people you know (for future implementation)
 # user study to find how better humans can classify the false information than the model
+
+# fix the counting method in preprocessing
+# begin building a model (simple neural network) (make several models with different params)
+# save the model using fickle
+# make simple cross validation
+# work on the web prototype

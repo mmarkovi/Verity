@@ -83,10 +83,16 @@ def getCoronaVocabulary():
     #X2 = vectorizerNoLem.fit_transform(text)
     
     print('Data shape for text: ', X.shape)
-    p#rint('Data shape for text: ', X2.shape)
+    print('Data shape for text: ', X.shape)
+
+
     
     #can comment out to not see the vocabularies
     print('Vocabulary for text: ', vectorizerText.get_feature_names())
+
+    print('X:', '\n', X)
+    print()
+    print(X[0])
 
     return X, Y, vectorizerText
 
