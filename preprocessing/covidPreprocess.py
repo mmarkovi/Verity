@@ -96,8 +96,8 @@ def getCoronaVocabulary():
 
     return X, Y, vectorizerText
 
-
-getCoronaVocabulary()
+if __name__ == "__main__":
+    getCoronaVocabulary()
 
 # preprocessing
 
