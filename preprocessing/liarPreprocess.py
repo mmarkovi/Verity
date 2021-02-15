@@ -23,17 +23,21 @@ import preprocessingFunctions as pf
 
 liarfile =  pd.read_csv("../datasets/fake news detection(LIAR)/liar_test.csv")
 
+liarfileTrain =  pd.read_csv("../datasets/fake news detection(LIAR)/liar_train.csv")
 
 
-def getLiarVocabulary():
+
+def getLiarVocabulary(isTrain = False):
     text = []
     titles = []
     Y = []
     i = 0
     nanTitle = 0
     nanText = 0
+    lfile = liarfileTrain if isTrain else liarfile
+    breakI = 15052 if isTrain else 1266
     print('\nExtracting tokens from each review.....(can be slow for a large number of reviews)......')   
-    for d in liarfile.loc:
+    for d in lfile.loc:
         ftext = d['fullText_based_content']     # keep only the text and label
         ftitle = d['statement']
         label = (d['label-liar']).lower()
@@ -70,7 +74,7 @@ def getLiarVocabulary():
     # (1) the standard 'english' stopword set 
     # (2) only keeping terms in the vocabulary that occur in at least 1% of documents
     # (3) allowing both unigrams and bigrams in the vocabulary (use "ngram_range=(1,2)" to do this)
-    vectorizerText = CountVectorizer(stop_words = 'english', min_df=.01, ngram_range=(1,2), tokenizer= pf.LemmaTokenizer() )
+    vectorizerText = CountVectorizer(stop_words = pf.getLemmatizedStopwords(), min_df=.01, ngram_range=(1,2), tokenizer= pf.LemmaTokenizer() )
     #vectorizerNoLem = CountVectorizer(stop_words = 'english', min_df=.01, ngram_range=(1,2)) #no lemmatization
     
     # create a sparse BOW array from 'text' using vectorizer  
@@ -81,8 +85,9 @@ def getLiarVocabulary():
     #print('Data shape for text: ', X2.shape)
     
     #can comment out to not see the vocabularies
-    print('Vocabulary for text: ', vectorizerText.get_feature_names())
+    #print('Vocabulary for text: ', vectorizerText.get_feature_names())
 
     return X, Y, vectorizerText
 
-getLiarVocabulary()
+if __name__ == "__main__":
+    getLiarVocabulary(True)

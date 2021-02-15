@@ -8,8 +8,15 @@ import re
 from nltk import word_tokenize
 import string
 from nltk.stem import WordNetLemmatizer 
+from nltk.corpus import stopwords
 #nltk.download('wordnet') #had to import this in order for the above to work
 
+lemmatizer = WordNetLemmatizer()
+lemmStop = [lemmatizer.lemmatize(t) for t in stopwords.words('english')]
+lemmStop += ['could', 'might', 'must', 'need', 'sha', 'wo', 'would']
+
+def getLemmatizedStopwords():
+    return lemmStop
 
 def replaceCommas(strToRepl):
     '''function to search for numbers like 100,000 and replace them with 100000

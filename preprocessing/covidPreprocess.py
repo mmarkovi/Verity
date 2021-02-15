@@ -20,6 +20,8 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 import preprocessingFunctions as pf
+from nltk.corpus import stopwords
+#nltk.download('stopwords')
 
 coronafile =  pd.read_csv("../datasets/corona_fake.csv")
 
@@ -75,7 +77,7 @@ def getCoronaVocabulary():
     # (1) the standard 'english' stopword set 
     # (2) only keeping terms in the vocabulary that occur in at least 1% of documents
     # (3) allowing both unigrams and bigrams in the vocabulary (use "ngram_range=(1,2)" to do this)
-    vectorizerText = CountVectorizer(stop_words = 'english', min_df=.01, ngram_range=(1,2), tokenizer= pf.LemmaTokenizer() )
+    vectorizerText = CountVectorizer(stop_words = pf.getLemmatizedStopwords(), min_df=.01, ngram_range=(1,2), tokenizer= pf.LemmaTokenizer() )
     #vectorizerNoLem = CountVectorizer(stop_words = 'english', min_df=.01, ngram_range=(1,2)) #no lemmatization
     
     # create a sparse BOW array from 'text' using vectorizer  
@@ -88,11 +90,11 @@ def getCoronaVocabulary():
 
     
     #can comment out to not see the vocabularies
-    print('Vocabulary for text: ', vectorizerText.get_feature_names())
+    #print('Vocabulary for text: ', vectorizerText.get_feature_names())
 
-    print('X:', '\n', X)
-    print()
-    print(X[0])
+    #print('X:', '\n', X)
+    #print()
+    #print(X[0])
 
     return X, Y, vectorizerText
 
