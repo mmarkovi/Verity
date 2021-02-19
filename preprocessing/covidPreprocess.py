@@ -48,7 +48,7 @@ coronafileTrain = coronafileTrain.loc[splitSize:,:].reset_index(drop = True)
 
 
 
-def getCoronaVocabulary(isTrain = False):
+def getCoronaVocabulary(isTrain = False, debug=False):
     '''
 
     Parameters
@@ -79,12 +79,13 @@ def getCoronaVocabulary(isTrain = False):
     # create a sparse BOW array from 'text' using vectorizer  
     X = vectorizerText.fit_transform(text)
     
-    print('Data shape for text: ', X.shape)
+    if debug:
+        print('Data shape for text: ', X.shape)
     #print('Vocabulary for text: ', vectorizerText.get_feature_names())
 
     return X, Y, vectorizerText
 
-def getCoronaText(isTrain = False):
+def getCoronaText(isTrain = False, debug=False):
     '''
 
     Parameters
@@ -112,7 +113,10 @@ def getCoronaText(isTrain = False):
     if (isTrain):
         cFile = coronafileTrain
         breakI = originalSize - splitSize
-    print('\nExtracting tokens....')   
+
+    if debug:
+        print('\nExtracting tokens....')   
+
     for d in cFile.loc:
         ftext = d['text']   # keep only the text and label
         ftitle = d['title']
@@ -140,8 +144,9 @@ def getCoronaText(isTrain = False):
         if (i == breakI):
             #for some reason the for loop doesnt know when to stop so put in a manual break
             break
-    print("there are", nanTitle, "nan titles")
-    print("there are", nanText, "nan text")
+    if debug:
+        print("there are", nanTitle, "nan titles")
+        print("there are", nanText, "nan text")
     return text, Y
 
 if __name__ == "__main__":

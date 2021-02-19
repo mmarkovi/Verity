@@ -26,6 +26,6 @@ BY 2/7/2021
 
 # fix the counting method in preprocessing
 # begin building a model (simple neural network) (make several models with different params)
-# save the model using fickle
+# save the model using pickle
 # make simple cross validation
 # work on the web prototype
