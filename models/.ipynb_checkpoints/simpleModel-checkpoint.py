@@ -21,8 +21,8 @@ import sys
 sys.path.insert(0, '../preprocessing/') #need this in order to get to the other file in other directory
 
 #can comment out the ones you aren't using to save a little bit of time
-# from covidPreprocess import getCoronaVocabulary, getCoronaText
-# from liarPreprocess import getLiarVocabulary, getLiarText
+from covidPreprocess import getCoronaVocabulary, getCoronaText
+from liarPreprocess import getLiarVocabulary, getLiarText
 from fnnPreprocess import getFNNVocabulary, getFNNText
 
 
@@ -52,12 +52,8 @@ def trainAndTestSimpleModel():
     used this article for help in writing the tensor parts of code so it works with the model
     https://medium.com/analytics-vidhya/part-1-sentiment-analysis-in-pytorch-82b35edb40b8
     '''
-    # X,Y = getCoronaText() #this function will give us the text array (not document term matrix) and Y
-    # X_train,Y_train, vectorizer_train = getCoronaVocabulary(True)
-    # X,Y = getLiarText()
-    # X_train,Y_train, vectorizer_train = getLiarVocabulary(True)
-    X,Y = getFNNText()
-    X_train,Y_train, vectorizer_train = getFNNVocabulary(True)
+    X,Y = getCoronaText() #this function will give us the text array (not document term matrix) and Y
+    X_train,Y_train, vectorizer_train = getCoronaVocabulary(True)
     
     #transform our testing dataset to match the vocabulary for the training dataset
     #transform will return the document-term matrix for X based on training dataset

@@ -20,8 +20,11 @@ import matplotlib.pyplot as plt
 
 import pandas as pd
 import preprocessingFunctions as pf
+from nltk.corpus import stopwords
+#nltk.download('stopwords')
 
 coronafile =  pd.read_csv("../datasets/corona_fake.csv")
+
 
 #cleaning up broken data according to labels added by
 # https://towardsdatascience.com/explore-covid-19-infodemic-2d1ceaae2306
@@ -31,18 +34,88 @@ coronafile.loc[43]['label'] = 'fake'
 coronafile.loc[131]['label'] = 'true'
 coronafile.loc[242]['label'] = 'fake'
 
+#splitting up into training and testing
+#sample with fraction of 1 will shuffle the dataset
+# the indexes will stay from the original dataset so calling reset_index will renumber them
+coronafileTrain = coronafile.sample(frac = 1, random_state=1).reset_index(drop = True) 
 
-def getCoronaVocabulary():
+originalSize = coronafile.shape[0]
+splitSize = int(originalSize * .75) #873 of the 1164 documents will go to training, rest test
+#reset index will make indices go from 0 to n, not be the shuffled original indices
+
+coronafile = coronafileTrain.loc[:splitSize-1,:] #goes inclusive to the last one, so subtract 1
+coronafileTrain = coronafileTrain.loc[splitSize:,:].reset_index(drop = True) 
+
+
+
+def getCoronaVocabulary(isTrain = False):
+    '''
+
+    Parameters
+    ----------
+    isTrain : bool, optional
+        Boolean to tell the program if we want to look at the training dataset (true)
+        or the testing dataset (false). The default is False.
+
+    Returns
+    -------
+    X : NxM Array
+        Returns a NxM matrix, where N = number of documents, M = size of vocabulary.
+        The array contains the documetn term matrix for our current dataset.
+    Y : TYPE
+        A list of integers (0 or 1) describing which class a certain document is from.
+        0 = fake article, 1 = true article
+    vectorizer : CountVectorizer
+        The BOW for our current dataset.
+        
+    '''
+    
+    text, Y = getCoronaText(isTrain)    
+    # create an instance of a CountVectorizer, using 
+    # (1) the standard 'english' stopword set from nltk, but lemmetized
+    # (2) only keeping terms in the vocabulary that occur in at least 1% of documents
+    # (3) allowing both unigrams and bigrams in the vocabulary (use "ngram_range=(1,2)" to do this)
+    vectorizerText = CountVectorizer(stop_words = pf.getLemmatizedStopwords(), min_df=.01, ngram_range=(1,2), tokenizer= pf.LemmaTokenizer() )
+    # create a sparse BOW array from 'text' using vectorizer  
+    X = vectorizerText.fit_transform(text)
+    
+    print('Data shape for text: ', X.shape)
+    #print('Vocabulary for text: ', vectorizerText.get_feature_names())
+
+    return X, Y, vectorizerText
+
+def getCoronaText(isTrain = False):
+    '''
+
+    Parameters
+    ----------
+    isTrain : bool, optional
+        Boolean to tell the program if we want to look at the training dataset (true)
+        or the testing dataset (false). The default is False.
+
+    Returns
+    -------
+    text : TYPE
+        A list of the imporant text (title, text) from the corresponding dataset
+    Y : TYPE
+        A list of integers (0 or 1) describing which class a certain document is from.
+        0 = fake article, 1 = true article
+
+    '''
     text = []
-    #titles = []
     Y = []
     i = 0
     nanTitle = 0
     nanText = 0
-    print('\nExtracting tokens from each review.....(can be slow for a large number of reviews)......')   
-    for d in coronafile.loc:
+    cFile = coronafile
+    breakI = splitSize
+    if (isTrain):
+        cFile = coronafileTrain
+        breakI = originalSize - splitSize
+    print('\nExtracting tokens....')   
+    for d in cFile.loc:
         ftext = d['text']   # keep only the text and label
-        ftitle = d['title']      
+        ftitle = d['title']
         label = (d['label']).lower()
         
         score = 1 #1 for true, 0 for fake
@@ -61,44 +134,17 @@ def getCoronaVocabulary():
         ftext = ftext + ftitle #combining the text and title into one
         ftext = pf.replaceCommas(ftext)
             
-        text.append(ftext)   
-        #titles.append(ftitle)
+        text.append(ftext)
         Y.append(score)
         i += 1
-        if (i == 1164):
+        if (i == breakI):
             #for some reason the for loop doesnt know when to stop so put in a manual break
             break
     print("there are", nanTitle, "nan titles")
     print("there are", nanText, "nan text")
-        
-    # create an instance of a CountVectorizer, using 
-    # (1) the standard 'english' stopword set 
-    # (2) only keeping terms in the vocabulary that occur in at least 1% of documents
-    # (3) allowing both unigrams and bigrams in the vocabulary (use "ngram_range=(1,2)" to do this)
-    vectorizerText = CountVectorizer(stop_words = 'english', min_df=.01, ngram_range=(1,2), tokenizer= pf.LemmaTokenizer() )
-    #vectorizerNoLem = CountVectorizer(stop_words = 'english', min_df=.01, ngram_range=(1,2)) #no lemmatization
-    
-    # create a sparse BOW array from 'text' using vectorizer  
-    X = vectorizerText.fit_transform(text)
-    #X2 = vectorizerNoLem.fit_transform(text)
-    
-    print('Data shape for text: ', X.shape)
-    #print('Data shape for text: ', X2.shape)
-    
-    #can comment out to not see the vocabularies
-#     print('Vocabulary for text: ', vectorizerText.get_feature_names())
+    return text, Y
 
-    return X, Y, vectorizerText
+if __name__ == "__main__":
+    getCoronaVocabulary()
+    getCoronaVocabulary(True)
 
-
-getCoronaVocabulary()
-
-# preprocessing
-
-# second dataset: convert the truthfulness into binary variable -- DONE
-# remove the data entry with NaN text and NaN title  -- DONE
-# combine the text and title as a single feature  -- DONE
-# lemmatization --DONE
-# try to get the whole number (e.g. 100,000 is counted as "100,000" instead of "100","000")  -- DONE
-# trigram (for future implementation) -easy to add later
-# separate the sources into names type and url types (for future implementation) -need to check in 

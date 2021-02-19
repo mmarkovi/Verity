@@ -37,7 +37,7 @@ coronafile.loc[242]['label'] = 'fake'
 #splitting up into training and testing
 #sample with fraction of 1 will shuffle the dataset
 # the indexes will stay from the original dataset so calling reset_index will renumber them
-coronafileTrain = coronafile.sample(frac = 1).reset_index(drop = True) 
+coronafileTrain = coronafile.sample(frac = 1, random_state=1).reset_index(drop = True) 
 
 originalSize = coronafile.shape[0]
 splitSize = int(originalSize * .75) #873 of the 1164 documents will go to training, rest test
@@ -112,7 +112,7 @@ def getCoronaText(isTrain = False):
     if (isTrain):
         cFile = coronafileTrain
         breakI = originalSize - splitSize
-    print('\nExtracting tokens from each review.....(can be slow for a large number of reviews)......')   
+    print('\nExtracting tokens....')   
     for d in cFile.loc:
         ftext = d['text']   # keep only the text and label
         ftitle = d['title']
