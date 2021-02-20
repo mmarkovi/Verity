@@ -43,9 +43,6 @@ originalSize = coronafile.shape[0]
 splitSize = int(originalSize * .75) #873 of the 1164 documents will go to training, rest test
 #reset index will make indices go from 0 to n, not be the shuffled original indices
 
-coronafile = coronafileTrain.loc[:splitSize-1,:] #goes inclusive to the last one, so subtract 1
-coronafileTrain = coronafileTrain.loc[splitSize:,:].reset_index(drop = True) 
-
 
 
 def getCoronaVocabulary(isTrain = False, debug=False):
@@ -69,6 +66,9 @@ def getCoronaVocabulary(isTrain = False, debug=False):
         The BOW for our current dataset.
         
     '''
+
+    coronafile = coronafileTrain.loc[:splitSize-1,:] #goes inclusive to the last one, so subtract 1
+    coronafileTrain = coronafileTrain.loc[splitSize:,:].reset_index(drop = True) 
     
     text, Y = getCoronaText(isTrain)    
     # create an instance of a CountVectorizer, using 
@@ -84,6 +84,8 @@ def getCoronaVocabulary(isTrain = False, debug=False):
     #print('Vocabulary for text: ', vectorizerText.get_feature_names())
 
     return X, Y, vectorizerText
+
+def get_Corona_
 
 def getCoronaText(isTrain = False, debug=False):
     '''
@@ -103,6 +105,10 @@ def getCoronaText(isTrain = False, debug=False):
         0 = fake article, 1 = true article
 
     '''
+
+    coronafile_Test = coronafileTrain.loc[:splitSize-1,:] #goes inclusive to the last one, so subtract 1
+    coronafile_Train = coronafileTrain.loc[splitSize:,:].reset_index(drop = True) 
+
     text = []
     Y = []
     i = 0
