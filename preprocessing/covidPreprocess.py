@@ -66,9 +66,6 @@ def getCoronaVocabulary(isTrain = False, debug=False):
         The BOW for our current dataset.
         
     '''
-
-    coronafile = coronafileTrain.loc[:splitSize-1,:] #goes inclusive to the last one, so subtract 1
-    coronafileTrain = coronafileTrain.loc[splitSize:,:].reset_index(drop = True) 
     
     text, Y = getCoronaText(isTrain)    
     # create an instance of a CountVectorizer, using 
@@ -85,7 +82,6 @@ def getCoronaVocabulary(isTrain = False, debug=False):
 
     return X, Y, vectorizerText
 
-def get_Corona_
 
 def getCoronaText(isTrain = False, debug=False):
     '''
@@ -105,19 +101,23 @@ def getCoronaText(isTrain = False, debug=False):
         0 = fake article, 1 = true article
 
     '''
+    coronafile_train = coronafile.sample(frac = 1, random_state=1).reset_index(drop = True)
 
-    coronafile_Test = coronafileTrain.loc[:splitSize-1,:] #goes inclusive to the last one, so subtract 1
-    coronafile_Train = coronafileTrain.loc[splitSize:,:].reset_index(drop = True) 
+    originalSize = coronafile.shape[0]
+    splitSize = int(originalSize * .75) #873 of the 1164 documents will go to training, rest test
+
+    coronafile_test = coronafile_train.loc[:splitSize-1,:] #goes inclusive to the last one, so subtract 1
+    coronafile_train = coronafile_train.loc[splitSize:,:].reset_index(drop = True) 
 
     text = []
     Y = []
     i = 0
     nanTitle = 0
     nanText = 0
-    cFile = coronafile
+    cFile = coronafile_test
     breakI = splitSize
     if (isTrain):
-        cFile = coronafileTrain
+        cFile = coronafile_train
         breakI = originalSize - splitSize
 
     if debug:
@@ -154,6 +154,57 @@ def getCoronaText(isTrain = False, debug=False):
         print("there are", nanTitle, "nan titles")
         print("there are", nanText, "nan text")
     return text, Y
+
+def get_whole_Corona_dataset():
+    '''
+    Instead of splitting the data into train and test data, it returns a whole
+    preprocessed data.
+    '''
+
+    text = []
+    Y = []
+    i = 0
+    nanTitle = 0
+    nanText = 0
+    cFile = coronafile
+    breakI = splitSize 
+
+    for d in cFile.loc:
+        ftext = d['text']   # keep only the text and label
+        ftitle = d['title']
+        label = (d['label']).lower()
+        
+        score = 1 #1 for true, 0 for fake
+        if (label == "fake"):
+            score = 0
+            
+        #some documents might not have titles (or possible text?)
+        #these are stored as NaN so replace with an empty string
+        if (not isinstance(ftext, str) and np.isnan([ftext])):
+            ftext = ""
+            nanText += 1
+        if (not isinstance(ftitle, str) and np.isnan(ftitle)):
+            ftitle = ""
+            nanTitle += 1
+        
+        ftext = ftext + ftitle #combining the text and title into one
+        ftext = pf.replaceCommas(ftext)
+            
+        text.append(ftext)
+        Y.append(score)
+
+    # create an instance of a CountVectorizer, using 
+    # (1) the standard 'english' stopword set from nltk, but lemmetized
+    # (2) only keeping terms in the vocabulary that occur in at least 1% of documents
+    # (3) allowing both unigrams and bigrams in the vocabulary (use "ngram_range=(1,2)" to do this)
+    vectorizerText = CountVectorizer(stop_words = pf.getLemmatizedStopwords(), min_df=.01, ngram_range=(1,2), tokenizer= pf.LemmaTokenizer() )
+    # create a sparse BOW array from 'text' using vectorizer  
+    X = vectorizerText.fit_transform(text)
+    
+    #print('Vocabulary for text: ', vectorizerText.get_feature_names())
+
+    return X, Y, vectorizerText
+
 
 if __name__ == "__main__":
     getCoronaVocabulary()
