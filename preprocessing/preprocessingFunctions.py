@@ -40,4 +40,8 @@ class LemmaTokenizer:
         
     def __call__(self, text):
         return [self.lemmatizer.lemmatize(t) for t in word_tokenize(text) if t.isalnum()]
+    
+def getTermMatrixTestData(textToTransform: str, vectorizer):
+    noComText = replaceCommas(textToTransform)
+    return vectorizer.transform([noComText])
 
