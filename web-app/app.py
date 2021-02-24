@@ -8,9 +8,12 @@ def index():
 
 @app.route('/', methods=['POST'])
 def form_post():
-    text = request.form['text']
-    processed_text = text.upper()
-    return processed_text
+    title = request.form['title']
+    content = request.form['content']
+    
+    lowercased_title = title.lower()
+    lowercased_text = content.lower()
+    return lowercased_title + lowercased_text
 
 @app.route('/about')
 def about():
