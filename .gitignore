@@ -6,8 +6,8 @@ datasets/fake news detection(LIAR)/liar_test.csv
 datasets/fake news detection(LIAR)/liar_train.csv
 
 # Web Application gitignore
-veirty/.DS_Store
-verity/node_modules
+web-app/.DS_Store
+*node_modules
 /dist
 
 # local env files

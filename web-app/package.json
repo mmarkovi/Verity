@@ -1,0 +1,16 @@
+{
+  "name": "verity",
+  "version": "1.0.0",
+  "description": "A website for detecting misinformation",
+  "main": "index.js",
+  "scripts": {
+    "compile:sass": "node-sass static/sass/main.scss static/css/style.css --output-style compressed",
+    "watch:sass": "node-sass static/sass/main.scss static/css/style.css --output-style compressed -w",
+    "devserver": "live-server"
+  },
+  "author": "Justin",
+  "license": "MIT",
+  "dependencies": {
+    "node-sass": "^5.0.0"
+  }
+}
