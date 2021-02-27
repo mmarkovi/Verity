@@ -29,3 +29,25 @@ BY 2/7/2021
 # save the model using pickle
 # make simple cross validation
 # work on the web prototype
+
+COVID-19
+    cdc
+    who
+    university
+Climate Change
+    UN
+    university/scientific
+Politics
+    https://apnews.com/hub/ap-fact-check
+Presidential
+    Academic
+    Search the most used President's name, link to query search of some website
+Immigration
+
+Medical (Vaccination)
+    CDC
+    University
+    WHO
+General (others)
+    https://apnews.com/hub/ap-fact-check
+    https://www.snopes.com/?s={query}

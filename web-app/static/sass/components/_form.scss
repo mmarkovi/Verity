@@ -29,11 +29,11 @@
     }
 
     &__input {
-        margin-right: 4rem;
         padding: 0 1.6rem;
         box-sizing: border-box;
         border: 2px solid $color-grey-dark-2;
         border-radius: 4px;
+        margin-right: 4rem;
         
         &:focus {
             

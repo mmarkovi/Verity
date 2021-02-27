@@ -13,7 +13,7 @@ def form_post():
     
     lowercased_title = title.lower()
     lowercased_text = content.lower()
-    return lowercased_title + lowercased_text
+    return lowercased_title + ' ' + lowercased_text
 
 @app.route('/about')
 def about():
