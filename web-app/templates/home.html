@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" type="image/svg" href="{{ url_for('static', filename='fav-icon.svg') }}">
+
+    <title>Verity</title>
+</head>
+<body>
+    <div class="navigation">
+        
+    </div>
+    <main class="main">
+        <div class="section-intro">
+            
+        </div>
+        <form method="POST" class="form">
+            <div class="form__grid">
+                <label for="name" class="form__item form__label">Title (optional)</label>
+                <input type="text" name="title" class="form__item form__input" id="name"></textarea>
+                
+                <label for="name" class="form__item form__label">Article</label>
+                <textarea type="text" name="content" class="form__item form__text-area" id="name" required></textarea>
+            </div>
+
+            <button type="submit" class="form__button">Submit</button>
+            
+        </form>
+    </main>
+
+    <footer class="footer">
+
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

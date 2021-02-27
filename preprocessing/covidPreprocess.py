@@ -123,7 +123,7 @@ def getCoronaText(isTrain = False, debug=False):
     if debug:
         print('\nExtracting tokens....')   
 
-    for d in cFile.loc:
+    for index, d in cFile.iterrows():
         ftext = d['text']   # keep only the text and label
         ftitle = d['title']
         label = (d['label']).lower()
@@ -160,6 +160,7 @@ def get_whole_Corona_dataset():
     Instead of splitting the data into train and test data, it returns a whole
     preprocessed data.
     '''
+    print('\n\n\nhi\n\n\n')
 
     text = []
     Y = []
@@ -169,7 +170,7 @@ def get_whole_Corona_dataset():
     cFile = coronafile
     breakI = splitSize 
 
-    for d in cFile.loc:
+    for index, d in cFile.iterrows():
         ftext = d['text']   # keep only the text and label
         ftitle = d['title']
         label = (d['label']).lower()
