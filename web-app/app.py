@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template
+from model_lib import load_model, predict_model
 
 app = Flask(__name__)
 
@@ -13,6 +14,12 @@ def form_post():
     
     lowercased_title = title.lower()
     lowercased_text = content.lower()
+
+    raw_text = lowercased_title + ' ' + lowercased_text
+
+    model, vec = load_model()
+    predict_model(model, vec, raw_text)
+
     return lowercased_title + ' ' + lowercased_text
 
 @app.route('/about')
