@@ -30,13 +30,21 @@
 
     &__input {
         margin-right: 4rem;
+        padding: 0 1.6rem;
+        box-sizing: border-box;
+        border: 2px solid $color-grey-dark-2;
+        border-radius: 4px;
+        
+        &:focus {
+            
+        }
     }
 
     &__text-area {
         height: 30rem;
         margin-right: 4rem;
-        
-        padding: 1.2rem 2rem;
+
+        padding: 1.2rem 1.6rem;
         box-sizing: border-box;
         border: 2px solid $color-grey-dark-2;
         border-radius: 4px;
