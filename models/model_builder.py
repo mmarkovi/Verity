@@ -95,9 +95,6 @@ def train_and_save_vec_model(*args_list, debug=False):
     # print('Y type:', type(Y))
     # print('Y:', Y)
 
-    numFold = 5
-    epoch_list = np.array([5, 10, 25, 50, 100])
-
     total_train_acc_list = []
     total_test_acc_list = []
         

@@ -27,21 +27,27 @@ from fnnPreprocess import getFNNVocabulary, getFNNText
 
 
 class SimpleNeuralNet(nn.Module):
-
-	def __init__(self, input_size, hidden_size, num_classes):
-		super(SimpleNeuralNet, self).__init__()
+    def __init__(self, input_size, hidden_size, num_classes):
+        super(SimpleNeuralNet, self).__init__()
 		#Written based off of the tutorial at
 		#https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/01-basics/feedforward_neural_network/main.py#L37-L49
-		self.hidden1 = nn.Linear(input_size, hidden_size) 
-		self.relu = nn.ReLU()   
-		self.hOutput1 = nn.Linear(hidden_size, num_classes)  
-		self.softmax = nn.Softmax(dim = 0)
+        self.hidden1 = nn.Linear(input_size, hidden_size) 
+        self.relu = nn.ReLU()
+        self.hOutput1 = nn.Linear(hidden_size, num_classes)
+        self.softmax = nn.Softmax(dim = 0)
+        self.init_weights()
 
-	def forward(self, x):
-		out = self.hidden1(x)
-		out = self.relu(out)
-		out = self.hOutput1(out)
-		out = self.softmax(out)
+    def init_weights(self):
+        initrange = 0.5
+        self.hidden1.weight.data.uniform_(-initrange, initrange)
+        self.relu.weight.data.uniform_(-initrange, initrange)
+        self.fc.bias.data.zero_()
+
+    def forward(self, x):
+        out = self.hidden1(x)
+        out = self.relu(out)
+        out = self.hOutput1(out)
+        out = self.softmax(out)
 		return out
     
 
@@ -91,7 +97,7 @@ def trainAndTestSimpleModel():
     num_epochs = 5
     learning_rate = 0.001
     #initialize our model
-    model = SimpleNeuralNet(vocabsize, 200, 2).to(device)
+    model = SimpleNeuralNet(1, 200, 2).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
     

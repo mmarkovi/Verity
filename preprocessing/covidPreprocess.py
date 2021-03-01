@@ -160,8 +160,6 @@ def get_whole_Corona_dataset():
     Instead of splitting the data into train and test data, it returns a whole
     preprocessed data.
     '''
-    print('\n\n\nhi\n\n\n')
-
     text = []
     Y = []
     i = 0
