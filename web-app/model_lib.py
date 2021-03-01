@@ -27,19 +27,31 @@ class SimpleNeuralNet(nn.Module):
 
 def load_model():
     # Load from file
-    pkl_filename = os.path.join("model", "pickle_model.pkl")
+    pkl_filename = "model/pickle_vec.pkl"
+    model_filename = "model/saved_model"
     with open(pkl_filename, 'rb') as file:
-        model = pickle.load(file)
         vec = pickle.load(file)
 
-        print(type(model))
-        print(type(vec))
+    model = torch.load(model_filename)
     return model, vec
 
 def predict_model(model, vec, raw_text):
-    # transform raw text into the vectorizer
-    text = pf.getTermMatrixTestData(raw_text, vec)
-    X_test_tensor = torch.from_numpy(text.todense()).float()
+    # transform raw text with the vectorizer
+    text = pf.getTermMatrixTestData(raw_text, vec).todense()
+
+    vocabsize = text.shape[1]
+
+    dummy = np.repeat(1, vocabsize * 15)
+    print(text.A1.shape)
+    dummy_text_matrix = np.concatenate([text.A1, dummy]).reshape(16, vocabsize)
+
+    print(dummy_text_matrix)
+    print(dummy_text_matrix.reshape(16, vocabsize).shape)
+    
+    X_test_tensor = torch.from_numpy(dummy_text_matrix).float()
+
+    print(X_test_tensor)
+    print(X_test_tensor.shape)
 
     #test against model
     output = model(X_test_tensor)
@@ -48,9 +60,9 @@ def predict_model(model, vec, raw_text):
 
     print(output)
 
-    print(Ytest)
+    print(predicted)
     return Ytest
 
 if __name__ == "__main__":
     model, vec = load_model()
-    predict_model(model, vec, "China virus affected US terrorism")
+    predict_model(model, vec, "You just need to add water, and the drugs and vaccines are ready to be administered. There are two parts to the kit: one holds pellets containing the chemical machinery that synthesises the end product, and the other holds pellets containing instructions that telll the drug which compound to create. Mix two parts together in a chosen combination, add water, and the treatment is ready.")

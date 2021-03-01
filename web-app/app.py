@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from model_lib import load_model, predict_model
+from model_lib import SimpleNeuralNet, load_model, predict_model
 
 app = Flask(__name__)
 
@@ -18,9 +18,11 @@ def form_post():
     raw_text = lowercased_title + ' ' + lowercased_text
 
     model, vec = load_model()
-    predict_model(model, vec, raw_text)
+    prediction = predict_model(model, vec, raw_text)
 
-    return lowercased_title + ' ' + lowercased_text
+    if prediction == 0:
+        return "False"
+    return "True"
 
 @app.route('/about')
 def about():
