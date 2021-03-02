@@ -32,13 +32,13 @@ class SimpleNeuralNet(nn.Module):
 		self.hidden1 = nn.Linear(input_size, hidden_size) 
 		self.relu = nn.ReLU()   
 		self.hOutput1 = nn.Linear(hidden_size, num_classes)  
-		self.softmax = nn.Softmax(dim = 0)
+		# self.softmax = nn.Softmax(dim = 0)
 
 	def forward(self, x):
 		out = self.hidden1(x)
 		out = self.relu(out)
 		out = self.hOutput1(out)
-		out = self.softmax(out)
+		# out = self.softmax(out)
 		return out
 
 def saveModel(model, vectorizer):
@@ -133,11 +133,11 @@ def train_and_save_simple_model(num_epochs = 5, learning_rate = 0.001, print_epo
     Y_train_tensor = torch.from_numpy(Y_train)
 
     train_data = torch.utils.data.TensorDataset(X_train_tensor, Y_train_tensor)
-    train_loader = torch.utils.data.DataLoader(train_data, batch_size=1, shuffle=False)
+    train_loader = torch.utils.data.DataLoader(train_data, batch_size=16, shuffle=False)
     vocabsize = X_train.shape[1]
     
     #initialize our model
-    model = SimpleNeuralNet(1, 200, 2).to(device)
+    model = SimpleNeuralNet(vocabsize, 200, 2).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
     

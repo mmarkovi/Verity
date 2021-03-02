@@ -16,6 +16,8 @@ import sys
 
 OPTIONS_NAME = "albert-base-v2"
 
+# using https://towardsdatascience.com/bert-to-the-rescue-17671379687f as reference
+
 class BertBinaryClassifier(nn.Module):
     def __init__(self, dropout=0.1):
         super(BertBinaryClassifier, self).__init__()
