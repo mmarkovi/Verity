@@ -18,11 +18,11 @@ def form_post():
     raw_text = lowercased_title + ' ' + lowercased_text
 
     model, vec = load_model()
-    prediction = predict_model(model, vec, raw_text)
+    prediction, prob_false = predict_model(model, vec, raw_text)
 
     if prediction == 0:
-        return "False"
-    return "True"
+        return "The article might contain false information."
+    return "We believe the provided article is true."
 
 @app.route('/about')
 def about():
