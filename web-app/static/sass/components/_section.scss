@@ -1,0 +1,45 @@
+.section-intro {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+
+	&__title {
+		font-size: 3rem;
+		font-weight: 700;
+		letter-spacing: .3rem;
+		margin-bottom: 2rem;
+
+		color: $color-blue-3;
+	}
+
+	&__content {
+		font-size: 2rem;
+		font-weight: 600;
+		letter-spacing: .2rem;
+		color: $color-grey-dark-3;
+	}
+}
+
+.demo {
+
+	&__search-icon {
+		width: 50rem;
+		height: 45rem;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+
+		animation: hover 3s ease-in-out infinite;
+	}
+
+	&__search-shadow {
+		width: 50rem;		
+		height: 10rem;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+
+		animation: scale 3s ease-in-out infinite;
+	}
+}

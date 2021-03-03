@@ -1,6 +1,32 @@
 .main {
     background-color: $color-black-haze;
 
-    margin: 0rem 6rem;
+    margin: 0rem 0rem;
     padding: 0rem 0rem 4rem 0rem;
+}
+
+.navigation {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	height: 7rem;
+	padding: 0 1.2rem;
+	background-image: linear-gradient(to right, $color-blue-3, $color-dark-blue-2);
+}
+
+.header-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+
+	height: 80vh;
+	padding: 0 4rem;
+
+	
+	background-image: linear-gradient(to bottom right, $color-black-haze, $color-blue-1);
+
+	@include respond(tab-port) {
+		flex-direction: column;
+		height: 160vh;
+	}
 }

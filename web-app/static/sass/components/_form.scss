@@ -6,7 +6,7 @@
 
     &__grid {
         display: grid;
-        grid-template-columns: [line-1] 15rem [line-2] auto [line-3];
+        grid-template-columns: [line-1] 20rem [line-2] auto [line-3];
         grid-template-rows: auto auto;
         row-gap: 3.5rem;
         width: 100%;

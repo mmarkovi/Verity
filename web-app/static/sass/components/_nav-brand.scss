@@ -1,0 +1,39 @@
+.nav-brand {
+	cursor: pointer;
+	user-select: none;
+	text-decoration: none;
+
+	height: 80%;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	&__img {
+		display: block;
+		margin: 0 auto;
+
+		max-width:100%;
+		max-height:100%;
+	}
+	
+	&__desc {
+		font-weight: 600;
+		font-size: 2.5rem;
+		letter-spacing: .4rem;
+		line-height: 5rem;
+		height: 100%;
+
+		display: flex;
+		align-items: center;
+		
+		color: $color-grey-light-2;
+
+		&::before {
+			content: "|";
+			margin-right: .8rem;
+			height: 100%;
+			font-size: 3rem;
+		}
+	}
+}

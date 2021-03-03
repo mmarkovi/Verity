@@ -1,0 +1,21 @@
+@keyframes hover {
+	0%, 100% {
+		transform: translateY(-1.2rem);
+	}
+
+	50% {
+		transform: translateY(1.2rem);
+	}
+}
+
+@keyframes scale {
+	0%, 100% {
+		transform: scaleX(1);
+		transform: scaleY(1);
+	}
+
+	50% {
+		transform: scaleX(1.4);
+		transform: scaleY(1.2);
+	}
+}
