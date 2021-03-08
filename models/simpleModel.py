@@ -48,7 +48,7 @@ class SimpleNeuralNet(nn.Module):
         out = self.relu(out)
         out = self.hOutput1(out)
         out = self.softmax(out)
-		return out
+        return out
     
 
 def trainAndTestSimpleModel():

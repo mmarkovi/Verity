@@ -23,7 +23,7 @@ import preprocessingFunctions as pf
 from nltk.corpus import stopwords
 #nltk.download('stopwords')
 
-coronafile =  pd.read_csv("../datasets/corona_fake.csv")
+coronafile =  pd.read_csv("../../datasets/corona_fake.csv")
 
 
 #cleaning up broken data according to labels added by
@@ -206,6 +206,8 @@ def get_whole_Corona_dataset():
 
 
 if __name__ == "__main__":
-    getCoronaVocabulary()
+    X, Y = getCoronaText()
     getCoronaVocabulary(True)
+    lt =  pf.LemmaTokenizer()
+    print(lt(X[0]))
 

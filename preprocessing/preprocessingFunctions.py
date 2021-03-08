@@ -39,7 +39,7 @@ class LemmaTokenizer:
         self.lemmatizer = WordNetLemmatizer()
         
     def __call__(self, text):
-        return [self.lemmatizer.lemmatize(t) for t in word_tokenize(text) if t.isalnum()]
+        return [self.lemmatizer.lemmatize(t.lower()) for t in word_tokenize(text) if t.isalnum()]
     
 def getTermMatrixTestData(textToTransform: str, vectorizer):
     noComText = replaceCommas(textToTransform)
