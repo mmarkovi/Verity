@@ -1,6 +1,4 @@
 from __future__ import unicode_literals, print_function, division
-from models.BERT.BERTPreprocess import load_corona_data
-#from models.BERT.BERTPreprocess import OPTIONS_NAME
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -19,7 +17,7 @@ from sklearn.metrics import classification_report
 import sys, os
 import pickle
 
-#OPTIONS_NAME = "albert-base-v2"
+OPTIONS_NAME = "albert-base-v2"
 
 from BERTPreprocess import load_tokens_labels
 
@@ -32,7 +30,7 @@ class BertBinaryClassifier(nn.Module):
     def __init__(self, dropout=0.1):
         super(BertBinaryClassifier, self).__init__()
         self.bert = BertModel.from_pretrained(pretrained_model_name_or_path =
-                                              'bert-base-uncased')
+                                              OPTIONS_NAME)
         #self.dropout = nn.Dropout(dropout)
         self.linear = nn.Linear(768, 1)
         self.sigmoid = nn.Sigmoid()
@@ -63,6 +61,7 @@ class ALBERTModel(AlbertPreTrainedModel):
 		self.predictions_LayerNorm = nn.LayerNorm(768)
 		self.predictions_bias = nn.Parameter(torch.zeros(5120)) 
 		self.predictions_decoder = nn.Linear(768, 5120)
+		self.sigmoid = nn.Sigmoid()
 
 	def forward(self, text):
 		loss, text_fea = self.encoder(text)[:2]
@@ -73,22 +72,15 @@ class ALBERTModel(AlbertPreTrainedModel):
 		return prediction_scores#, text_fea
     
     
-'''
-RuntimeError: Error(s) in loading state_dict for BertModel:
-	size mismatch for bert.embeddings.word_embeddings.weight: 
-        copying a param with shape torch.Size([30522, 768]) from checkpoint, 
-        the shape in current model is torch.Size([7417, 768]).
-'''
-
 def load_and_process_data():
     X,Y = getCoronaText()
     X_train, Y_train = getCoronaText(True)
     
     #using a subset because it takes a long time to run
-    X = X[:50]
-    Y = Y[:50]
-    X_train = X_train[:50]
-    Y_train = Y_train[:50]
+    X = X[:5]
+    Y = Y[:5]
+    X_train = X_train[:5]
+    Y_train = Y_train[:5]
     
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
     
@@ -119,11 +111,11 @@ def load_and_process_data():
     test_loader = torch.utils.data.DataLoader(test_data,batch_size=16, shuffle=True)
     
     #vocabsize = X_train.shape[1]
-    num_epochs = 5
+    num_epochs = 1
     config = AlbertConfig.from_pretrained("albert-base-v2")
     bert_clf = ALBERTModel(config)
     #bert_clf = bert_clf.cuda()
-    optimizer = torch.optim.Adam(bert_clf.parameters(), lr=3e-6)
+    optimizer = torch.optim.Adam(bert_clf.parameters(), lr=1e-06)
     BATCH_SIZE = 16
     
     for epoch_num in range(num_epochs):
@@ -152,6 +144,7 @@ def load_and_process_data():
             clear_output(wait=True)
             print('Epoch: ', epoch_num + 1)
             print("\r" + "{0}/{1} loss: {2} ".format(step_num, len(train_data) / BATCH_SIZE, train_loss / (step_num + 1)))
+
     bert_clf.eval()
     bert_predicted = []
     all_logits = []
@@ -165,6 +158,7 @@ def load_and_process_data():
             loss = loss_func(logits.view(labels.shape[0], -1), labels)
             numpy_logits = logits.view(labels.shape[0], -1).cpu().detach().numpy()
             
+            print(numpy_logits)
             tp = np.zeros(numpy_logits[:, 0].shape)
             tp[numpy_logits[:, 0] > 0.5] = 1
             bert_predicted += list(tp)
