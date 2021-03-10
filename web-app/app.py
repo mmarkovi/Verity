@@ -24,6 +24,10 @@ def form_post():
         return "The article might contain false information."
     return "We believe the provided article is true."
 
+@app.route('/predict', methods=["GET"])
+def get_prediction():
+	
+
 @app.route('/about')
 def about():
     return "About"

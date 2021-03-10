@@ -51,3 +51,11 @@ Medical (Vaccination)
 General (others)
     https://apnews.com/hub/ap-fact-check
     https://www.snopes.com/?s={query}
+
+# Office Hour Questions
+
+- Slow BERT model training
+- How to access model weights
+- What we can do to explore how the neural network is processing the inputs
+- See what we should focus on
+- Is it allowed to deploy the website (Apache, Google Domain)

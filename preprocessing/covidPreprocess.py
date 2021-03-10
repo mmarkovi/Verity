@@ -23,7 +23,7 @@ import preprocessingFunctions as pf
 from nltk.corpus import stopwords
 #nltk.download('stopwords')
 
-coronafile =  pd.read_csv("../../datasets/corona_fake.csv")
+coronafile =  pd.read_csv("../datasets/corona_fake.csv")
 
 
 #cleaning up broken data according to labels added by
