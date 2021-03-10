@@ -1,6 +1,6 @@
 from __future__ import unicode_literals, print_function, division
+from models.BERT.BERTPreprocess import load_corona_data
 #from models.BERT.BERTPreprocess import OPTIONS_NAME
-from pytorch_pretrained_bert import BertTokenizer, BertForMaskedLM
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -8,7 +8,7 @@ import pandas as pd
 
 # install package using "user> conda install -c huggingface transformers"
 # more details at https://huggingface.co/transformers/
-from transformers import BertTokenizer, BertForSequenceClassification, BertModel, AlbertModel,AlbertPreTrainedModel, AlbertConfig
+from transformers import BertTokenizer, BertForSequenceClassification, BertModel, AlbertModel, AlbertPreTrainedModel, AlbertConfig
 
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
@@ -16,12 +16,13 @@ import numpy as np
 from torch.nn.utils import clip_grad_norm_
 from IPython.display import clear_output
 from sklearn.metrics import classification_report
-import sys
+import sys, os
+import pickle
 
 #OPTIONS_NAME = "albert-base-v2"
 
+from BERTPreprocess import load_tokens_labels
 
-import sys
 sys.path.insert(0, '../../preprocessing/') #need this in order to get to the other file in other directory
 from covidPreprocess import getCoronaVocabulary, getCoronaText
 
@@ -171,6 +172,26 @@ def load_and_process_data():
     Y_test = np.array(Y, dtype = float)
     print(np.mean(bert_predicted == Y_test))
     print(classification_report(Y_test, bert_predicted))
+
+def train_corona_model():
+	corona_token_filename = os.path.join('corona', 'token.pkl')
+
+	tokens, token_ids, labels = load_tokens_labels(corona_token_filename)
+
+	print(tokens)
+
+
+def save_model(dir_name, model):
+	version_num = 1
+	while True:
+		file_path = os.path.join(dir_name, "model" + str(version_num) + ".pkl")
+		if os.path.exists(file_path):
+			version_num += 1
+		else:
+			break
+	
+	with open(file_path, 'wb') as file:
+		pickle.dump(model, file)
     
 if __name__ == "__main__":
     load_and_process_data()
