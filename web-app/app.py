@@ -26,7 +26,7 @@ def form_post():
 
 @app.route('/predict', methods=["GET"])
 def get_prediction():
-	
+	data = request.get_json()
 
 @app.route('/about')
 def about():

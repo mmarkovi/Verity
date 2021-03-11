@@ -21,8 +21,10 @@ OPTIONS_NAME = "albert-base-v2"
 
 from BERTPreprocess import load_tokens_labels
 
-sys.path.insert(0, '../../preprocessing/') #need this in order to get to the other file in other directory
-from covidPreprocess import getCoronaVocabulary, getCoronaText
+import time
+
+# sys.path.insert(0, '../../preprocessing/') #need this in order to get to the other file in other directory
+# from covidPreprocess import getCoronaVocabulary, getCoronaText
 
 # using https://towardsdatascience.com/bert-to-the-rescue-17671379687f as reference
 
@@ -172,7 +174,26 @@ def train_corona_model():
 
 	tokens, token_ids, labels = load_tokens_labels(corona_token_filename)
 
-	print(tokens)
+	# print('tokens:', tokens[:1], len(tokens), sep='\n')
+	# print('token_ids:', token_ids[:1], len(token_ids), sep='\n')
+	# print('labels:', labels[:10], len(labels), sep='\n')
+
+	albert = AlbertModel.from_pretrained(OPTIONS_NAME)
+	x = torch.tensor(token_ids)
+
+	start = time.time()
+	outputs = albert(x)
+	end = time.time()
+
+	print('it took', end - start, 'seconds')
+	
+	# print('x shape:', x.shape)
+	# print('y:', y)
+	# print('y shape:', y.shape)
+	# print('pooled:', pooled)
+	# print('pooled shape:', pooled.shape)
+
+
 
 
 def save_model(dir_name, model):
@@ -188,4 +209,4 @@ def save_model(dir_name, model):
 		pickle.dump(model, file)
     
 if __name__ == "__main__":
-    load_and_process_data()
+    train_corona_model()
