@@ -1,7 +1,6 @@
 from __future__ import unicode_literals, print_function, division
 import torch
 import torch.nn as nn
-from torchtext.data import Field, TabularDataset, BucketIterator, Iterator
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -50,11 +49,11 @@ def load_fnn_data():
 	texts = np.array([title + ' ' + content for title, content in zip(titles, contents)])
 
 	# makes the array of labels (0 == false, 1 == true)
-	labels = data['label_fnn'].to_numpy() == "real"
+	labels = 1 * (data['label_fnn'].to_numpy() == "real")
 
 	tokenizer = AutoTokenizer.from_pretrained(OPTIONS_NAME)
 	train_tokens = tokenize_texts(tokenizer, texts)
-	train_tokens_ids = list(map(tokenizer.convert_tokens_to_ids, train_tokens))
+	train_tokens_ids = np.array(list(map(tokenizer.convert_tokens_to_ids, train_tokens)))
 
 	save_tokens_labels("fnn", train_tokens, train_tokens_ids, labels)
 
@@ -76,11 +75,11 @@ def load_corona_data():
 	texts = np.array([title + ' ' + content for title, content in zip(titles, contents)])
 
 	# makes the array of labels (0 == false, 1 == true)
-	labels = data['label'].to_numpy() == "TRUE"
+	labels = 1 * (data['label'].to_numpy() == "TRUE")
 
 	tokenizer = AutoTokenizer.from_pretrained(OPTIONS_NAME)
 	train_tokens = tokenize_texts(tokenizer, texts)
-	train_tokens_ids = list(map(tokenizer.convert_tokens_to_ids, train_tokens))
+	train_tokens_ids = np.array(list(map(tokenizer.convert_tokens_to_ids, train_tokens)))
 
 	save_tokens_labels("corona", train_tokens, train_tokens_ids, labels)
 
@@ -97,7 +96,7 @@ def tokenize_texts(tokenizer, texts):
 		# padding symbol is <sep> for Albert
 		tokens.append(token)
 
-	return tokens
+	return np.array(tokens)
 
 def save_tokens_labels(dir_name, tokens, token_ids, labels):
 	if not os.path.exists(dir_name):

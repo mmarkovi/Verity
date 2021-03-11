@@ -179,13 +179,21 @@ def train_corona_model():
 	# print('labels:', labels[:10], len(labels), sep='\n')
 
 	albert = AlbertModel.from_pretrained(OPTIONS_NAME)
-	x = torch.tensor(token_ids)
 
-	start = time.time()
-	outputs = albert(x)
-	end = time.time()
+	X_tensor = torch.from_numpy(token_ids).to(torch.int64)
+	Y_tensor = torch.from_numpy(labels).to(torch.int64)
 
-	print('it took', end - start, 'seconds')
+	train_data = torch.utils.data.TensorDataset(X_tensor, Y_tensor)
+	train_loader = torch.utils.data.DataLoader(train_data, batch_size=16, shuffle=True)
+
+	for step_num, (ids, labels) in enumerate(train_loader, start=1):
+		start = time.time()
+		outputs = albert(ids)
+		end = time.time()
+
+		print('it took', end - start, 'seconds')
+		print(outputs)
+		break
 	
 	# print('x shape:', x.shape)
 	# print('y:', y)
