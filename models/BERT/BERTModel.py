@@ -169,7 +169,7 @@ def load_and_process_data():
     print(np.mean(bert_predicted == Y_test))
     print(classification_report(Y_test, bert_predicted))
 
-def train_corona_model():
+def get_albert_outputs_corona():
 	corona_token_filename = os.path.join('corona', 'token.pkl')
 
 	tokens, token_ids, labels = load_tokens_labels(corona_token_filename)
@@ -186,14 +186,29 @@ def train_corona_model():
 	train_data = torch.utils.data.TensorDataset(X_tensor, Y_tensor)
 	train_loader = torch.utils.data.DataLoader(train_data, batch_size=16, shuffle=True)
 
-	for step_num, (ids, labels) in enumerate(train_loader, start=1):
-		start = time.time()
-		outputs = albert(ids)
-		end = time.time()
+	aggregated_outputs = None
 
-		print('it took', end - start, 'seconds')
-		print(outputs)
-		break
+	total_iterations = len(labels) // 16 + 1
+
+	start = time.time()
+	for step_num, (ids, labels) in enumerate(train_loader, start=1):
+		outputs = albert(ids)
+
+		pooled = outputs['pooler_output'].detach().numpy()
+
+		if step_num > 1:
+			aggregated_outputs = np.concatenate((aggregated_outputs, pooled))
+		else:
+			aggregated_outputs = pooled
+		
+		print('Finished Step {} out of {}'.format(step_num, total_iterations))
+
+	save_albert_outputs('corona', aggregated_outputs)
+	
+	end = time.time()
+	print('It took {:.2f} seconds'.format(end - start))
+
+	return aggregated_outputs
 	
 	# print('x shape:', x.shape)
 	# print('y:', y)
@@ -215,6 +230,12 @@ def save_model(dir_name, model):
 	
 	with open(file_path, 'wb') as file:
 		pickle.dump(model, file)
+
+def save_albert_outputs(dir_name, out):
+	file_path = os.path.join(dir_name, "albert_out.pkl")
+
+	with open(file_path, 'wb') as file:
+		pickle.dump(out, file)
     
 if __name__ == "__main__":
-    train_corona_model()
+    get_albert_outputs_corona()
