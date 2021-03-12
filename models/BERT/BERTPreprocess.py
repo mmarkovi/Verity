@@ -110,8 +110,10 @@ def save_tokens_labels(dir_name, tokens, token_ids, labels):
 		pickle.dump(labels, file)
 
 
-def load_tokens_labels(filename):
-	assert os.path.exists(filename)
+def load_tokens_labels(topic):
+	assert topic in {'corona', 'fnn', 'liar'}
+	assert os.path.exists(topic)
+	filename = os.path.join(topic, 'token.pkl')
 
 	with open(filename, 'rb') as file:
 		tokens = pickle.load(file)
@@ -121,5 +123,5 @@ def load_tokens_labels(filename):
 	return tokens, token_ids, labels
 
 if __name__ == "__main__":
-	# load_fnn_data()
+	load_fnn_data()
 	load_corona_data()

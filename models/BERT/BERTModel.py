@@ -6,7 +6,7 @@ import pandas as pd
 
 # install package using "user> conda install -c huggingface transformers"
 # more details at https://huggingface.co/transformers/
-from transformers import BertTokenizer, BertForSequenceClassification, BertModel, AlbertModel, AlbertPreTrainedModel, AlbertConfig
+from transformers import AlbertForSequenceClassification, AlbertModel, AlbertPreTrainedModel, AlbertConfig
 
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
@@ -169,16 +169,16 @@ def load_and_process_data():
     print(np.mean(bert_predicted == Y_test))
     print(classification_report(Y_test, bert_predicted))
 
-def get_albert_outputs_corona():
-	corona_token_filename = os.path.join('corona', 'token.pkl')
+def get_albert_outputs(topic="corona"):
+	assert topic in {"corona", "fnn", "liar"}
 
-	tokens, token_ids, labels = load_tokens_labels(corona_token_filename)
+	tokens, token_ids, labels = load_tokens_labels(topic)
 
 	# print('tokens:', tokens[:1], len(tokens), sep='\n')
 	# print('token_ids:', token_ids[:1], len(token_ids), sep='\n')
 	# print('labels:', labels[:10], len(labels), sep='\n')
 
-	albert = AlbertModel.from_pretrained(OPTIONS_NAME)
+	albert = AlbertForSequenceClassification.from_pretrained(OPTIONS_NAME)
 
 	X_tensor = torch.from_numpy(token_ids).to(torch.int64)
 	Y_tensor = torch.from_numpy(labels).to(torch.int64)
@@ -203,39 +203,30 @@ def get_albert_outputs_corona():
 		
 		print('Finished Step {} out of {}'.format(step_num, total_iterations))
 
-	save_albert_outputs('corona', aggregated_outputs)
+	save_albert_outputs(topic, aggregated_outputs)
 	
 	end = time.time()
 	print('It took {:.2f} seconds'.format(end - start))
 
 	return aggregated_outputs
-	
-	# print('x shape:', x.shape)
-	# print('y:', y)
-	# print('y shape:', y.shape)
-	# print('pooled:', pooled)
-	# print('pooled shape:', pooled.shape)
 
 
-
-
-def save_model(dir_name, model):
-	version_num = 1
-	while True:
-		file_path = os.path.join(dir_name, "model" + str(version_num) + ".pkl")
-		if os.path.exists(file_path):
-			version_num += 1
-		else:
-			break
-	
-	with open(file_path, 'wb') as file:
-		pickle.dump(model, file)
 
 def save_albert_outputs(dir_name, out):
 	file_path = os.path.join(dir_name, "albert_out.pkl")
 
 	with open(file_path, 'wb') as file:
 		pickle.dump(out, file)
-    
+
+
+def load_albert_outputs(topic='corona'):
+	assert topic in {"corona", "fnn", "liar"}
+	file_path = os.path.join(topic, 'albert_out.pkl')
+	
+	with open(file_path, 'rb') as file:
+		out = pickle.load(file)
+
+	return out
+
 if __name__ == "__main__":
-    get_albert_outputs_corona()
+    get_albert_outputs(topic="fnn")
