@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, print_function, division
 import torch
+from torch._C import device
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -7,6 +8,8 @@ import pandas as pd
 # install package using "user> conda install -c huggingface transformers"
 # more details at https://huggingface.co/transformers/
 from transformers import AlbertForSequenceClassification, AlbertModel, AlbertPreTrainedModel, AlbertConfig
+from transformers import AdamW, get_linear_schedule_with_warmup
+
 
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
@@ -169,6 +172,110 @@ def load_and_process_data():
     print(np.mean(bert_predicted == Y_test))
     print(classification_report(Y_test, bert_predicted))
 
+
+# using https://medium.com/@aniruddha.choudhury94/part-2-bert-fine-tuning-tutorial-with-pytorch-for-text-classification-on-the-corpus-of-linguistic-18057ce330e1 as reference
+def fine_tune_albert(topic="corona"):
+	assert topic in {"corona", "fnn", "liar"}
+
+	tokens, token_ids, labels = load_tokens_labels(topic)
+
+	# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+	device = "cpu"
+
+	model = AlbertForSequenceClassification.from_pretrained(OPTIONS_NAME, num_labels=1, output_attentions=False, output_hidden_states=False).to(device)
+
+	X_tensor = torch.from_numpy(token_ids).long()
+	Y_tensor = torch.from_numpy(labels).float()
+
+	train_data = torch.utils.data.TensorDataset(X_tensor, Y_tensor)
+	train_loader = torch.utils.data.DataLoader(train_data, batch_size=16, shuffle=True)
+
+	b_size = 16
+	learning_rate = 5e-5
+	num_epoch = 3
+
+	optimizer = AdamW(model.parameters(), lr = learning_rate, eps = 1e-8)
+	total_steps = len(train_loader) * num_epoch
+	scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps = total_steps)
+
+	loss_values = []
+
+	for epoch_i in range(num_epoch):
+		print("")
+		print('======== Epoch {:} / {:} ========'.format(epoch_i + 1, num_epoch))
+		print('Training...')
+
+		# Measure how long the training epoch takes.
+		t0 = time.time()
+		# Reset the total loss for this epoch.
+		total_loss = 0
+		# Put the model into training mode.
+		model.train()
+
+		for step, batch in enumerate(train_loader):
+			# Progress update every 40 batches.
+			if step % 40 == 0 and not step == 0:
+				# Calculate elapsed time in minutes.
+				elapsed = time.time() - t0
+				
+				# Report progress.
+				print('  Batch {:>5,}  of  {:>5,}.    Elapsed: {:.2f} seconds.'.format(step, len(train_loader), elapsed))
+
+			b_input_ids, b_labels = batch
+			b_input_ids = b_input_ids.to(device)
+			b_labels = b_labels.to(device)
+
+			# print(torch.cuda.memory_summary(device=device, abbreviated=False))
+			
+			model.zero_grad()        
+			# Perform a forward pass (evaluate the model on this training batch).
+			# This will return the loss (rather than the model output) because we
+			# have provided the `labels`.
+			# The documentation for this `model` function is here: 
+			# https://huggingface.co/transformers/v2.2.0/model_doc/bert.html#transformers.BertForSequenceClassification
+			outputs = model(b_input_ids, token_type_ids=None, labels=b_labels)
+			
+			# The call to `model` always returns a tuple, so we need to pull the 
+			# loss value out of the tuple.
+			loss = outputs[0]
+			# Accumulate the training loss over all of the batches so that we can
+			# calculate the average loss at the end. `loss` is a Tensor containing a
+			# single value; the `.item()` function just returns the Python value 
+			# from the tensor.
+			total_loss += loss.item()
+			# Perform a backward pass to calculate the gradients.
+			loss.backward()
+			# Clip the norm of the gradients to 1.0.
+			# This is to help prevent the "exploding gradients" problem.
+			torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+			# Update parameters and take a step using the computed gradient.
+			# The optimizer dictates the "update rule"--how the parameters are
+			# modified based on their gradients, the learning rate, etc.
+			optimizer.step()
+			# Update the learning rate.
+			scheduler.step()
+		# Calculate the average loss over the training data.
+		avg_train_loss = total_loss / len(train_loader)            
+		
+		# Store the loss value for plotting the learning curve.
+		loss_values.append(avg_train_loss)
+		print("")
+		print("  Average training loss: {0:.2f}".format(avg_train_loss))
+		print("  Training epoch took: {:<.2f} seconds".format(time.time() - t0))
+			
+		
+	print("")
+	print("Training complete!")
+
+
+	save_albert_model(topic, model)
+
+	return model
+
+
+
+
+
 def get_albert_outputs(topic="corona"):
 	assert topic in {"corona", "fnn", "liar"}
 
@@ -177,8 +284,9 @@ def get_albert_outputs(topic="corona"):
 	# print('tokens:', tokens[:1], len(tokens), sep='\n')
 	# print('token_ids:', token_ids[:1], len(token_ids), sep='\n')
 	# print('labels:', labels[:10], len(labels), sep='\n')
+	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-	albert = AlbertForSequenceClassification.from_pretrained(OPTIONS_NAME)
+	albert = AlbertForSequenceClassification.from_pretrained(OPTIONS_NAME, num_labels=1, output_attentions=False, output_hidden_states=False).to(device)
 
 	X_tensor = torch.from_numpy(token_ids).to(torch.int64)
 	Y_tensor = torch.from_numpy(labels).to(torch.int64)
@@ -210,7 +318,18 @@ def get_albert_outputs(topic="corona"):
 
 	return aggregated_outputs
 
+"""
+Helper Functions
+"""
 
+def find_accuracy(preds, labels):
+	comparisons = preds.reshape(-1).detach().numpy().round() == labels
+	return comparisons.mean()
+
+
+"""
+Pickle Methods (Save & Load)
+"""
 
 def save_albert_outputs(dir_name, out):
 	file_path = os.path.join(dir_name, "albert_out.pkl")
@@ -228,5 +347,22 @@ def load_albert_outputs(topic='corona'):
 
 	return out
 
+
+def save_albert_model(dir_name, model):
+	file_path = os.path.join(dir_name, "albert_model.pkl")
+
+	with open(file_path, 'wb') as file:
+		pickle.dump(model, file)
+
+
+def load_albert_model(topic='corona'):
+	assert topic in {"corona", "fnn", "liar"}
+	file_path = os.path.join(topic, 'albert_model.pkl')
+	
+	with open(file_path, 'rb') as file:
+		out = pickle.load(file)
+
+	return out
+
 if __name__ == "__main__":
-    get_albert_outputs(topic="fnn")
+    fine_tune_albert(topic="corona")
