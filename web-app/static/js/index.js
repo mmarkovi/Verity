@@ -1,7 +1,21 @@
 function show_result(response) {
-	$('.main').addClass('result-mode')
+	$('.main').addClass('result-mode');
 	// "The article might contain false information."
 	// "We believe the provided article is true."
+
+	data = JSON.parse(response)
+	
+	if (data["prediction"] == true) {
+		$('.result__icon').html(`<use xlink:href="/static/check-marks.svg#icon-check"></use>`);
+		$('.result__icon').css('fill', '#00FF7F')
+		$('.result__text').html("We believe the provided article is true.");
+		$('.result__prob').html("Probability of True: " + (data["prob"] * 100).toFixed(2) + " %");
+	} else {
+		$('.result__icon').html(`<use xlink:href="/static/check-marks.svg#icon-cross"></use>`);
+		$('.result__icon').css('fill', '#DC143C')
+		$('.result__text').html("The article might contain false information.");
+		$('.result__prob').html("Probability of True: " + (data["prob"] * 100).toFixed(2) + " %");
+	}
 }
 
 $("#article").on( "submit", (event) => {

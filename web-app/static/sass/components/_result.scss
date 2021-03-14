@@ -17,6 +17,7 @@
 		height: 10rem;
 		
 		fill: #00FF7F;
+		flex: 2;
 	}
 
 	&__text {
@@ -24,5 +25,15 @@
 		color: black;
 		font-weight: 600;
 		letter-spacing: .2rem;
+
+		flex: 1;
+	}
+
+	&__prob {
+		font-size: 2rem;
+		color: black;
+		font-weight: 600;
+		letter-spacing: .2rem;
+		flex: 1;
 	}
 }
