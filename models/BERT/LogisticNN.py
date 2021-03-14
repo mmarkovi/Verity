@@ -11,7 +11,7 @@ from BERTPreprocess import load_tokens_labels
 
 
 class LogisticBinaryClassifier(nn.Module):
-	def __init__(self, input_size, hidden_size1=256, hidden_size2=128):
+	def __init__(self, input_size, hidden_size1=400, hidden_size2=200):
 		super(LogisticBinaryClassifier, self).__init__()
 		self.fc1 = nn.Linear(input_size, hidden_size1)
 		self.fc2 = nn.Linear(hidden_size1, hidden_size2)
@@ -24,7 +24,7 @@ class LogisticBinaryClassifier(nn.Module):
 		return x
 		
 
-def train_model(topic, data=None, learning_rate=5e-03, epochs=500):
+def train_model(topic, data=None, learning_rate=1e-02, epochs=500):
 	assert topic in {'corona', 'fnn', 'liar'}
 
 	if data is not None:

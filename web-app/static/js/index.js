@@ -1,4 +1,8 @@
-$( "#article" ).on( "submit", (event) => {
+function show_result(response) {
+	$('.main').addClass('result-mode')
+}
+
+$("#article").on( "submit", (event) => {
 	event.preventDefault();
 
 	let title = $("#title").val();
@@ -14,25 +18,16 @@ $( "#article" ).on( "submit", (event) => {
 		content = "";
 	}
 	
-	data = {"title": title, "content": content};
+	data = JSON.stringify({"title": title, "content": content});
 
-	console.log($(".form").attr("action"))
+	console.log($(".form").attr("action"));
 
 	$.ajax({
-		type: 'POST',
+		type: 'GET',
 		url: $(".form").attr("action"),
-		data: data,
-		contentType: 'application/json',
-        dataType: 'json',
+		data: `title=${title}&content=${content}`,
+        dataType: 'text',
 
-		success: (response) => {alert(response)},
+		success: show_result,
 	});
 });
-
-$.ajax({
-	type: 'POST',
-	url: $(".form").attr("action"),
-	data: $(".form").serialize(), 
-	//or your custom data either as object {foo: "bar", ...} or foo=bar&...
-	success: function(response) {},
-  });

@@ -15,11 +15,11 @@ from BERTPreprocess import load_tokens_labels
 from LogisticNN import LogisticBinaryClassifier, train_model
 
 
-def validate_LogisticNN(topic, learning_rate=5e-03, epochs=500, debug=False):
+def validate_LogisticNN(topic, debug=False):
 	assert topic in {'corona', 'fnn', 'liar'}
 	tokens, token_ids, labels = load_tokens_labels(topic)
 
-	epoch_list = [50, 100, 250, 500]
+	epoch_list = [50, 100, 250]
 	numFold = 3
 
 	total_train_acc_list = []
@@ -42,7 +42,7 @@ def validate_LogisticNN(topic, learning_rate=5e-03, epochs=500, debug=False):
 			# print('Y train shape:', Y_train.shape)
 			# print('Y test shape:', Y_test.shape)
 			
-			model = train_model('corona', data=(X_train, Y_train), epochs=n_epoch)
+			model = train_model(topic, data=(X_train, Y_train), epochs=n_epoch)
 
 			X_train_tensor = torch.from_numpy(X_train).float()
 			Y_train_tensor = torch.from_numpy(Y_train).float()
@@ -141,4 +141,4 @@ def get_model_accuracy(train_loader, test_loader, model, debug=False):
 
 
 if __name__ == "__main__":
-	validate_LogisticNN('corona')
+	validate_LogisticNN('fnn')

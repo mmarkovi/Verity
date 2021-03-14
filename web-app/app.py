@@ -1,7 +1,11 @@
 from flask import Flask, request, render_template
+from flask_cors import CORS, cross_origin
+
 from model_lib import SimpleNeuralNet, load_model, predict_model
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
 def index():
@@ -24,17 +28,18 @@ def form_post():
         return "The article might contain false information."
     return "We believe the provided article is true."
 
-@app.route('/predict')
-def prediction_api():
-	return "API for prediction"
+# @app.route('/predict')
+# def prediction_api():
+# 	return "API for prediction"
 
-@app.route('/predict', methods=["GET", "POST"])
+@app.route('/predict', methods=["GET"])
 def get_prediction():
-	data = request.get_json()
+	title = request.args.get('title')
+	content = request.args.get('content')
 
-	print('data:', data)
+	print('data:', title)
 	
-	return data
+	return title + " " + content
 
 @app.route('/about')
 def about():

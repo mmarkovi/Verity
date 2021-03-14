@@ -37,7 +37,10 @@
         </div>
     </header>
     <main class="main">
-        <form action="{{ url_for('get_prediction') }}" class="form" id="article">
+        <form action="http://localhost:5000/predict" class="form" id="article">
+			<div class="form__intro">
+				
+			</div>
             <div class="form__grid">
                 <label for="name" class="form__item form__label">Title <h4>(Optional)</h4></label>
                 <input type="text" name="title" class="form__item form__input" id="title" autocomplete="off"></input>
@@ -50,12 +53,12 @@
             
         </form>
 		
-		<div class="result hidden">
-			<div class="result__icon">
-
-			</div>
+		<div class="result">
+			<svg class="result__icon" id="check-icon">
+				<use xlink:href="{{ url_for('static', filename='check-marks.svg') }}#icon-check"></use>
+			</svg>
 			<div class="result__text">
-
+				We believe the provided article is true.
 			</div>
 		</div>
     </main>

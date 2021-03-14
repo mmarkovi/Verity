@@ -63,6 +63,9 @@ def predict_model(model, vec, raw_text):
 	print(output)
 
 	print(predicted)
+
+	assert Ytest in {0, 1}
+	assert round(prob_false) in {0, 1} 
 	return Ytest, prob_false
 
 if __name__ == "__main__":

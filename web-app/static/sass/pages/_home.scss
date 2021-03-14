@@ -1,8 +1,48 @@
 .main {
-    background-color: $color-black-haze;
+    background-color: $color-white;
 
-    margin: 0rem 0rem;
     padding: 0rem 0rem 4rem 0rem;
+
+	position: relative;
+	width: 100%;
+	min-height: 70vh;
+	overflow: hidden;
+
+	&:before {
+		content: "";
+
+		position: absolute;
+		width: 200rem;
+		height: 200rem;
+		border-radius: 50%;
+		background-image: linear-gradient(-45deg, $color-sky-blue-2, $color-sky-blue-2);
+
+		top: -10%;
+		right: 100%;
+		transform: translateY(-50%);
+
+		transition: 1.5s ease-in-out;
+		z-index: 6;
+	}
+
+	&.result-mode {
+		&::before {
+			transform: translate(100%, -50%);
+  			right: 0%;
+		}
+
+		& .result {
+			opacity: 1;
+  			z-index: 2;
+		}
+
+		& .form {
+			opacity: 0;
+			z-index: 1;
+		}
+	}
+	
+
 }
 
 .navigation {
