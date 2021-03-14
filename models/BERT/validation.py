@@ -105,8 +105,6 @@ def get_model_accuracy(train_loader, test_loader, model, debug=False):
 		total  = 0
 		correct = 0
 
-		print('total:', total)
-
 		for data, labels in train_loader:
 			predicted = model(data)
 			labels = labels.detach().numpy()
