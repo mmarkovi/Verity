@@ -1,5 +1,7 @@
 function show_result(response) {
 	$('.main').addClass('result-mode')
+	// "The article might contain false information."
+	// "We believe the provided article is true."
 }
 
 $("#article").on( "submit", (event) => {

@@ -9,19 +9,51 @@ import torch.nn as nn
 import preprocessingFunctions as pf
 
 class SimpleNeuralNet(nn.Module):
-	def __init__(self, input_size, hidden_size, num_classes):
-		super(SimpleNeuralNet, self).__init__()
-		#Written based off of the tutorial at
-		#https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/01-basics/feedforward_neural_network/main.py#L37-L49
-		self.hidden1 = nn.Linear(input_size, hidden_size) 
-		self.relu = nn.ReLU()   
-		self.hOutput1 = nn.Linear(hidden_size, num_classes)
+    def __init__(self, input_size, hidden_size):
+        super(SimpleNeuralNet, self).__init__()
+        #Written based off of the tutorial at
+        #https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/01-basics/feedforward_neural_network/main.py#L37-L49
+        self.hidden1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.oupt = nn.Linear(hidden_size, 1)
 
-	def forward(self, x):
-		out = self.hidden1(x)
-		out = self.relu(out)
-		out = self.hOutput1(out)
-		return out
+    def forward(self, x):
+        out = torch.tanh(self.hidden1(x))
+        out = torch.sigmoid(self.oupt(out))
+        return out
+
+class TwoHiddenLayerNeuralNet(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(TwoHiddenLayerNeuralNet, self).__init__()
+        #Written based off of the tutorial at
+        #https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/01-basics/feedforward_neural_network/main.py#L37-L49
+        self.hidden1 = nn.Linear(input_size, hidden_size)
+        self.hidden2 = nn.Linear(hidden_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.oupt = nn.Linear(hidden_size, 1)
+
+    def forward(self, x):
+        out = torch.tanh(self.hidden1(x))
+        out = torch.tanh(self.hidden2(out))
+        out = torch.sigmoid(self.oupt(out))
+        return out
+
+class SimpleGeneralNeuralNet(nn.Module):
+    def __init__(self, input_size, hidden_size, num_classes):
+        super(SimpleNeuralNet, self).__init__()
+        #Written based off of the tutorial at
+        #https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/01-basics/feedforward_neural_network/main.py#L37-L49
+        self.hidden1 = nn.Linear(input_size, hidden_size)
+        self.relu = nn.ReLU()
+        self.hOutput1 = nn.Linear(hidden_size, num_classes)
+        self.softmax = nn.Softmax(dim = 0)
+
+    def forward(self, x):
+        out = self.hidden1(x)
+        out = self.relu(out)
+        out = self.hOutput1(out)
+#         out = self.softmax(out)
+        return out
 
 def load_model():
     # Load from file
@@ -33,7 +65,34 @@ def load_model():
     model = torch.load(model_filename)
     return model, vec
 
-def predict_model(model, vec, raw_text):
+def load_covid_model():
+	general_filename = 'model/covid_vec.pkl'
+	model_filename = 'model/covid_saved_model'
+	with open(general_filename, 'rb') as file:
+        vec = pickle.load(file)
+
+	model = torch.load(model_filename)
+	return model, vec
+
+def load_fnn_model():
+	general_filename = 'model/fnn_vec.pkl'
+	model_filename = 'model/fnn_saved_model'
+	with open(general_filename, 'rb') as file:
+        vec = pickle.load(file)
+
+	model = torch.load(model_filename)
+	return model, vec
+
+def load_general_model():
+	general_filename = 'model/general_vec.pkl'
+	model_filename = 'model/general_saved_model'
+	with open(general_filename, 'rb') as file:
+        vec = pickle.load(file)
+
+	model = torch.load(model_filename)
+	return model, vec
+
+def covid_general_predict_model(model, vec, raw_text):
     # transform raw text with the vectorizer
 	text = pf.getTermMatrixTestData(raw_text, vec).todense()
 
@@ -45,7 +104,7 @@ def predict_model(model, vec, raw_text):
 
 	print(dummy_text_matrix)
 	print(dummy_text_matrix.reshape(16, vocabsize).shape)
-    
+
 	X_test_tensor = torch.from_numpy(text).float()
 
 	print(X_test_tensor)
@@ -67,6 +126,13 @@ def predict_model(model, vec, raw_text):
 	assert Ytest in {0, 1}
 	assert round(prob_false) in {0, 1} 
 	return Ytest, prob_false
+
+def predict_model(model, vec, raw_text):
+	text = pf.getTermMatrixTestData(raw_text, vec).todense()
+	X_test_tensor = torch.from_numpy(text).float()
+    output_prob = model(X_test_tensor)
+
+	return output_prob
 
 if __name__ == "__main__":
     model, vec = load_model()
