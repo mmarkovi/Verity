@@ -37,18 +37,27 @@
         </div>
     </header>
     <main class="main">
-        <form method="POST" class="form">
+        <form action="{{ url_for('get_prediction') }}" class="form" id="article">
             <div class="form__grid">
                 <label for="name" class="form__item form__label">Title <h4>(Optional)</h4></label>
-                <input type="text" name="title" class="form__item form__input" id="name" autocomplete="off"></input>
+                <input type="text" name="title" class="form__item form__input" id="title" autocomplete="off"></input>
                 
                 <label for="name" class="form__item form__label">Article</label>
-                <textarea type="text" name="content" class="form__item form__text-area" id="name" required></textarea>
+                <textarea type="text" name="content" class="form__item form__text-area" id="content" required></textarea>
             </div>
 
             <button type="submit" class="form__button">Submit</button>
             
         </form>
+		
+		<div class="result hidden">
+			<div class="result__icon">
+
+			</div>
+			<div class="result__text">
+
+			</div>
+		</div>
     </main>
 
     <footer class="footer">

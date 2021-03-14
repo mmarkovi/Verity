@@ -32,3 +32,6 @@ pnpm-debug.log*
 
 # large pickle files
 *token.pkl
+
+# zip files
+*.zip
