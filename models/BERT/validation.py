@@ -16,6 +16,10 @@ from LogisticNN import LogisticBinaryClassifier, train_model
 
 
 def validate_LogisticNN(topic, debug=False):
+	"""
+	Uses K-fold stratified cross-validation on the logistic neural network
+	Charts the training and testing accuracies on various training epochs
+	"""
 	assert topic in {'corona', 'fnn', 'liar'}
 	tokens, token_ids, labels = load_tokens_labels(topic)
 

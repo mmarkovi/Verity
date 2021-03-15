@@ -50,4 +50,4 @@ def about():
     return "About"
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="192.168.1.236", port=int("80"))
