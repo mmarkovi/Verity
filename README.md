@@ -26,17 +26,22 @@ This project will use recurrent neural networks to predict whether the article i
  - liarPreprocess: provides functions for getting list of titles and text combined into one string and list of integer (0 or 1) labels (getLiarText), or both these lists along with a CountVectorizer (getLiarVocabulary), with options for getting training or testing data for the LIAR dataset.
  - fnnPreprocess: provides functions for getting list of titles and text combined into one string and list of integer (0 or 1) labels (getFNNText), or both these lists along with a CountVectorizer (getFNNVocabulary), with options for getting training or testing data for the FakeNewsNet dataset.
  - combineMultipleDatasets: provides funtions for getting list of titles and text combined into one string and list of integer (0 or 1) labels (getAllText, getAllText2), or both these lists along with a CountVectorizer (getAllVocabulary), with options for getting training or testing data for the all three datasets combined.
+
 *Note: all getVocabulary and getText functions were written with assistance from Assignment 1 for CS 175*
+
 **.ipynb files**
  - DataVisualization: interactive python notebook which displays top 10 words in false/true articles and what percentage of the total words they are (for both fake/true only, or fake and true together), as well as the top 10 words that appear in true articles, but not false, and vice versa.
 
 ### Models
 **.py files**
  - simpleModel: contains a simple feed forward neural network (SimpleNeuralNet) which can be trained and tested on either one of our datasets (trainAndTestSimpleModel).
+
 *Note: SimpleNeuralNet was built with assistance from https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/01-basics/feedforward_neural_network/main.py#L37-L49 and trainAndTestSimpleModel was built with assistance from https://medium.com/analytics-vidhya/part-1-sentiment-analysis-in-pytorch-82b35edb40b8 and base code from assignment 2.*
  - saveModel: contains functions for saving our neural network models and corresponding vectorizers to a pickle file (saveModel, train_and_save_simple_model) and for loading out of a pickle file (loadModel), along with some test functions to make sure the model was still working after loading (testDataset, testText).
+
 *Note: saving and loading files built with assistance from https://stackabuse.com/scikit-learn-save-and-restore-models/*
  - model_builder: repeated function for training of the model (train_simple_model_with_data), as well as a function for printing out accuracy, and other similar stats (train_and_save_vec_model).
+
 **.ipynb files**
  - logisticClassifier:
  - CovidGeneralClassifier:
@@ -48,9 +53,11 @@ This project will use recurrent neural networks to predict whether the article i
  **Folders**
   - corona: pickle files containing preprocessed, tokenized data from the ALBERTTokenizer for the COVID-19 dataset.
   - fnn: pickle files containing preprocessed, tokenized data from the ALBERTTokenizer for the FNN dataset.
+ 
  **.py files**
   - BERTPreprocess: contains a copied version of replaceCommas for ease of access, as well as functions for loading, tokenizing (tokenize_texts), and saving data to pickle files (load_fnn_data, load_corona_data, save_tokens_labels, load_tokens_labels).
   - BERTModel: contains a BERT and ALBERT model (BertBinaryClassifier, ALBERTModel) as well as two different options for fine tuning the ALBERT model, itself (load_and_process_data, fine_tune_albert).
+
 *Note: BertBinaryClassifier, ALBERTModel, and load_and_process data were built using help from https://towardsdatascience.com/bert-to-the-rescue-17671379687f and https://github.com/LydiaXiaohongLi/Albert_Finetune_with_Pretrain_on_Custom_Corpus/blob/master/Albert_Finetune_with_Pretrain_on_Custom_Corpus_ToyModel.ipynb while fine_tune_albert was built with assistance from https://medium.com/@aniruddha.choudhury94/part-2-bert-fine-tuning-tutorial-with-pytorch-for-text-classification-on-the-corpus-of-linguistic-18057ce330e1*
   - logisticNN: contains a simple neural network (LogisticBinaryClassifier) for use in testing the preprocessed BERT inputs saved from BERTPreprocess, as well as functions to train (train_model) and save the finished model (save_log_model).
   - validation: contains functions for training (validate_LogisticNN) and testing the accuracy of the model from logisticNN using testing data (get_model_accuracy)
