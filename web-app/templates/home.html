@@ -37,18 +37,33 @@
         </div>
     </header>
     <main class="main">
-        <form method="POST" class="form">
+        <form action="http://localhost:5000/predict" class="form" id="article">
+			<div class="form__intro">
+				
+			</div>
             <div class="form__grid">
                 <label for="name" class="form__item form__label">Title <h4>(Optional)</h4></label>
-                <input type="text" name="title" class="form__item form__input" id="name" autocomplete="off"></input>
+                <input type="text" name="title" class="form__item form__input" id="title" autocomplete="off"></input>
                 
                 <label for="name" class="form__item form__label">Article</label>
-                <textarea type="text" name="content" class="form__item form__text-area" id="name" required></textarea>
+                <textarea type="text" name="content" class="form__item form__text-area" id="content" required></textarea>
             </div>
 
             <button type="submit" class="form__button">Submit</button>
             
         </form>
+		
+		<div class="result">
+			<svg class="result__icon" id="check-icon">
+				<use xlink:href="{{ url_for('static', filename='check-marks.svg') }}#icon-check"></use>
+			</svg>
+			<div class="result__text">
+				We believe the provided article is true.
+			</div>
+			<div class="result__prob">
+				50%
+			</div>
+		</div>
     </main>
 
     <footer class="footer">

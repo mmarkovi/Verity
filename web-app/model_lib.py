@@ -69,16 +69,16 @@ def load_covid_model():
 	general_filename = 'model/covid_vec.pkl'
 	model_filename = 'model/covid_saved_model'
 	with open(general_filename, 'rb') as file:
-        vec = pickle.load(file)
+		vec = pickle.load(file)
 
 	model = torch.load(model_filename)
 	return model, vec
-
+	
 def load_fnn_model():
 	general_filename = 'model/fnn_vec.pkl'
 	model_filename = 'model/fnn_saved_model'
 	with open(general_filename, 'rb') as file:
-        vec = pickle.load(file)
+		vec = pickle.load(file)
 
 	model = torch.load(model_filename)
 	return model, vec
@@ -87,7 +87,7 @@ def load_general_model():
 	general_filename = 'model/general_vec.pkl'
 	model_filename = 'model/general_saved_model'
 	with open(general_filename, 'rb') as file:
-        vec = pickle.load(file)
+		vec = pickle.load(file)
 
 	model = torch.load(model_filename)
 	return model, vec
@@ -122,12 +122,16 @@ def covid_general_predict_model(model, vec, raw_text):
 	print(output)
 
 	print(predicted)
+
+	assert Ytest in {0, 1}
 	return Ytest, prob_false
 
 def predict_model(model, vec, raw_text):
 	text = pf.getTermMatrixTestData(raw_text, vec).todense()
 	X_test_tensor = torch.from_numpy(text).float()
-    output_prob = model(X_test_tensor)
+	output_prob = float(model(X_test_tensor).detach().numpy()[0][0])
+
+	print(float(output_prob), type(output_prob))
 
 	return output_prob
 

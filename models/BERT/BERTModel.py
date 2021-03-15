@@ -179,8 +179,8 @@ def fine_tune_albert(topic="corona"):
 
 	tokens, token_ids, labels = load_tokens_labels(topic)
 
-	# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-	device = "cpu"
+	device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+	# device = "cpu"
 
 	model = AlbertForSequenceClassification.from_pretrained(OPTIONS_NAME, num_labels=1, output_attentions=False, output_hidden_states=False).to(device)
 
