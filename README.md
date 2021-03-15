@@ -11,7 +11,8 @@ Misinformation-Verity
 Mia Markovic, Connor Couture, Justin Kang
 
 ### Project Summary
-This project will use recurrent neural networks to predict whether the article is fake or real using general news and COVID-19 news datasets and also classify what broad category (like coronavirus, vaccines, etc.) that the misinformation falls into (a link to a factual source regarding this topic will be given). We plan to evaluate the models with cross-validation and also make a website where one can input a URL to a news article and the website will run it through our AI and both output whether it is fake or not and if it is misinformation it will be classified into one of our broad misinformation categories and give a link to a factual source about that topic. 
+In this project, we are attempting to investigate the issue of misinformation and fake news in our media, and classify articles as true or fake using natural language processing. The project uses a combination of simple and deep feed-forward neural networks to classify articles as being general news or COVID-19 related, and then feeds this information into the corresponding classifier. This model takes in the preprocessed text, done with a bag of words, and then outputs a label. The models have been validated using cross-validation as well as a user study for analysis. The model will be fully deployed on our website, where one can input an article title and plaintext to find out whether it is true or fake. 
+
 
 ### Datasets
  - corona_fake : csv for our entire COVID-19 dataset, can be found at raw.githubusercontent.com/susanli2016/NLP-with-Python/master/data/corona_fake.csv
@@ -43,12 +44,12 @@ This project will use recurrent neural networks to predict whether the article i
  - model_builder: repeated function for training of the model (train_simple_model_with_data), as well as a function for printing out accuracy, and other similar stats (train_and_save_vec_model).
 
 **.ipynb files**
- - logisticClassifier:
- - CovidGeneralClassifier:
- - ModelAnalysis:
- - simpleModel:
- - simpleModelA:
- - simpleModelOneNeuronOutput:
+ - logisticClassifier: contains our first model, a simple logistic classifier, which we trained (logisticClassifyData) on various max_iter values to see if we could reach convergence, based on which bag of words model was passed in (getVocabulary).
+ - simpleModel: contains updated code from simpleModel.py for the neural network (SimpleNeuralNet) and the training step (trainSimpleModel, train_simple_model_with_data) and testing step (testModel), along with tests for various epochs.
+ - simpleModelA: contains updated code from simpleModel.py for the neural network (SimpleNeuralNet) and the training and testing steps (trainAndTestSimpleModel), along with tests for various epochs. Also contains the base model (TwoHiddenLayerNeuralNet) and training and testing steps (trainAndTestTwoHiddenLayerModel) for a two layer feed forward neural network.
+ - simpleModelOneNeuronOutput: updated neural networks from simpleModelA (SimpleNeuralNet, TwoHiddenLayerNeuralNet) to have a single neuron output.
+ - CovidGeneralClassifier: contains both a logistic classifier (logistic_classification) and a simple neural net (SimpleGeneralNeuralNet, trainSimpleModel) with various tests to determine which model whad higher testing accuracy.
+ - ModelAnalysis: contains updated code from simpleModel.ipynb for the neural network (SimpleNeuralNet) and training the data (trainAndTestSimpleModelAndGetProbs), allowing for easy visualization of different documents based on output probabilities. 
  #### BERT
  **Folders**
   - corona: pickle files containing preprocessed, tokenized data from the ALBERTTokenizer for the COVID-19 dataset.
@@ -69,5 +70,16 @@ This project will use recurrent neural networks to predict whether the article i
 
 
 ### Web-app
- - 
- 
+ **Folders**
+ - model: contains pickles of saved neural networks for each model and corresponding vectorizers
+ - static:
+ - templates:
+
+**.py files**
+ - preprocessingFunctions: copy of same file from the Preprocessing folder for use for the website.
+ - model_lib: copy of the classes for the saved neural networks (SimpleNeuralNet, TwoHiddenLayerNeuralNet, SimpleGeneralNeuralNet), along with loading functions from the pickle (load_model, load_covid_model, load_fnn_model, load_general_model) and testing functions (covid_general_predict_model, predict_model) for the website.
+ - app: contains the main functions used in the website for displaying and obtaining a prediction.
+
+**other files**
+ - yarn.lock:
+ - package.json:
