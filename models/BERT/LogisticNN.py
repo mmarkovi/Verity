@@ -25,6 +25,10 @@ class LogisticBinaryClassifier(nn.Module):
 		
 
 def train_model(topic, data=None, learning_rate=1e-02, epochs=500):
+	"""
+	Train the logistic neural network with given dataset or topic of the
+	dataset
+	"""
 	assert topic in {'corona', 'fnn', 'liar'}
 
 	if data is not None:

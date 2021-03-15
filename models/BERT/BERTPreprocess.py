@@ -35,6 +35,9 @@ def replaceCommas(strToRepl):
 
 
 def load_fnn_data():
+	"""
+	Tokenizes the FNN dataset using Albert tokkenizer
+	"""
 	data = pd.read_csv(FNN_FILENAME)
 
 	texts = []
@@ -61,6 +64,9 @@ def load_fnn_data():
 
 
 def load_corona_data():
+	"""
+	Tokenizes the Corona dataset using Albert tokkenizer
+	"""
 	data = pd.read_csv(CORONA_FILENAME)
 
 	texts = []

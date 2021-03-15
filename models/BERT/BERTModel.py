@@ -78,6 +78,10 @@ class ALBERTModel(AlbertPreTrainedModel):
     
     
 def load_and_process_data():
+	"""
+	Performs fine tuning on Covid dataset
+	This function is deprecated (use fine_tune_albert)
+	"""
     X,Y = getCoronaText()
     X_train, Y_train = getCoronaText(True)
     
@@ -175,6 +179,10 @@ def load_and_process_data():
 
 # using https://medium.com/@aniruddha.choudhury94/part-2-bert-fine-tuning-tutorial-with-pytorch-for-text-classification-on-the-corpus-of-linguistic-18057ce330e1 as reference
 def fine_tune_albert(topic="corona"):
+	"""
+	Fine tune he Albert model with the tokens and labels of the dataset
+	This takes more than 2 days for completion.
+	"""
 	assert topic in {"corona", "fnn", "liar"}
 
 	tokens, token_ids, labels = load_tokens_labels(topic)
@@ -273,10 +281,12 @@ def fine_tune_albert(topic="corona"):
 	return model
 
 
-
-
-
 def get_albert_outputs(topic="corona"):
+	"""
+	Extracts the model output with the saved tokens without fine tuning the model
+
+	@input topic the type of datasets to extract the outputs from
+	"""
 	assert topic in {"corona", "fnn", "liar"}
 
 	tokens, token_ids, labels = load_tokens_labels(topic)
@@ -323,6 +333,9 @@ Helper Functions
 """
 
 def find_accuracy(preds, labels):
+	"""
+	Compare the expected labels and predictions to calculate the accuracy
+	"""
 	comparisons = preds.reshape(-1).detach().numpy().round() == labels
 	return comparisons.mean()
 
