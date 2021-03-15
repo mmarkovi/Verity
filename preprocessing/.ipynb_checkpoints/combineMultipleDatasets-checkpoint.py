@@ -23,7 +23,10 @@ from fnnPreprocess import getFNNVocabulary, getFNNText
 
 def getAllVocabulary(isTrain = False):
     '''
-
+    Gets and preprocesses data for topic classification of raw text between covid-related and not covid-related.
+    Combines data from Corona, Liar, and FNN datasets. All data from Corona dataset set to have label 1. 
+    All data from Liar and FNN datasets set to have label 0.
+    
     Parameters
     ----------
     isTrain : bool, optional
@@ -61,6 +64,13 @@ def getAllVocabulary(isTrain = False):
     return X, Y, vectorizerText
 
 def getAllText(isTrain = False):
+    '''
+    Gets and preprocesses data for topic classification of raw text between covid-related and not covid-related.
+    Combines data from Corona, Liar, and FNN datasets. All data from Corona dataset set to have label 1. 
+    All data from Liar and FNN datasets set to have label 0.
+    
+    Preprocesses data in a manner suitable for Pytorch neural networks.
+    '''
     text_corona, Y_corona = getCoronaText(isTrain)
     text_liar, Y_liar = getLiarText(isTrain)
     text_fnn, Y_fnn = getFNNText(isTrain)
@@ -94,6 +104,13 @@ def getAllText(isTrain = False):
     # return X, Y_all, vectorizerText
 
 def getAllText2(isTrain = False):
+    '''
+    Gets and preprocesses data for topic classification of raw text between covid-related and not covid-related.
+    Combines data from Corona, Liar, and FNN datasets. All data from Corona dataset set to have label 1. 
+    All data from Liar and FNN datasets set to have label 0.
+    
+    Preprocesses data in a manner suitable for sklearn logistic regression.
+    '''
     text_corona, Y_corona = getCoronaText(isTrain)
     text_liar, Y_liar = getLiarText(isTrain)
     text_fnn, Y_fnn = getFNNText(isTrain)
