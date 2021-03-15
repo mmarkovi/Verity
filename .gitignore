@@ -35,3 +35,6 @@ pnpm-debug.log*
 
 # zip files
 *.zip
+
+# Justin's private file
+*justin__*
