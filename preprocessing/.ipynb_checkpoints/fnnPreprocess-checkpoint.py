@@ -66,6 +66,45 @@ def getFNNVocabulary(isTrain = False):
 
     return X, Y, vectorizerText
 
+def getFNNVocabulary2(isTrain = False):
+    '''
+
+    Parameters
+    ----------
+    isTrain : bool, optional
+        Boolean to tell the program if we want to look at the training dataset (true)
+        or the testing dataset (false). The default is False.
+
+    Returns
+    -------
+    X : NxM Array
+        Returns a NxM matrix, where N = number of documents, M = size of vocabulary.
+        The array contains the documetn term matrix for our current dataset.
+    Y : TYPE
+        A list of integers (0 or 1) describing which class a certain document is from.
+        0 = fake article, 1 = true article
+    vectorizer : CountVectorizer
+        The BOW for our current dataset.
+        
+    '''
+    
+    text, Y = getFNNText(isTrain)    
+    # create an instance of a CountVectorizer, using 
+    # (1) the standard 'english' stopword set from nltk, but lemmetized
+    # (2) only keeping terms in the vocabulary that occur in at least 1% of documents
+    # (3) allowing both unigrams and bigrams in the vocabulary (use "ngram_range=(1,2)" to do this)
+    vectorizerText = CountVectorizer(stop_words = pf.getLemmatizedStopwords(), min_df=.01, ngram_range=(1,2), tokenizer= pf.LemmaTokenizer() )
+    # create a sparse BOW array from 'text' using vectorizer  
+    
+#     X = vectorizerText.fit_transform(text)
+    
+#     print('Data shape for text: ', X.shape)
+    
+    #can comment out to not see the vocabularies
+    #print('Vocabulary for text: ', vectorizerText.get_feature_names())
+
+    return text, Y, vectorizerText
+
 def getFNNText(isTrain = False):
     '''
 
